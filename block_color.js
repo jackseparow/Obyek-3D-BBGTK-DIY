@@ -3,24 +3,12 @@
  * GeoBlock BBGTK DIY
  */
 
-// Pastikan FieldColour terdaftar di Blockly registry
-if (window.fieldColour && window.fieldColour.FieldColour) {
-  Blockly.fieldRegistry.register('field_colour', window.fieldColour.FieldColour);
-}
-
+// Mendaftarkan Blok Ubah Warna dengan FieldColour Native
 Blockly.Blocks['transform_color_palette'] = {
   init: function() {
     this.appendDummyInput()
-        .appendField("ubah warna");
-
-    // Menggunakan FieldColour dari plugin @blockly/field-colour atau bawaan
-    if (window.fieldColour && window.fieldColour.FieldColour) {
-      this.appendField(new window.fieldColour.FieldColour("#ff0000"), "COLOR");
-    } else if (Blockly.FieldColour) {
-      this.appendField(new Blockly.FieldColour("#ff0000"), "COLOR");
-    } else {
-      this.appendField(new Blockly.FieldTextInput("#ff0000"), "COLOR");
-    }
+        .appendField("ubah warna")
+        .appendField(new Blockly.FieldColour("#ff0000"), "COLOR"); // Palet warna kotak bawaan
 
     this.appendValueInput("OPACITY")
         .setCheck("Number")
@@ -33,7 +21,7 @@ Blockly.Blocks['transform_color_palette'] = {
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour("#FF9800");
-    this.setTooltip("Klik kotak warna untuk memilih palet warna dan tentukan tingkat transparansinya (0-100%)");
+    this.setTooltip("Klik kotak warna untuk memilih palet warna visual dan menentukan transparansi (0-100%)");
   }
 };
 
