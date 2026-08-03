@@ -16,93 +16,19 @@
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    body, html {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    #app-header {
-      height: 50px;
-      background-color: #1e1e2f;
-      color: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 20px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-      z-index: 10;
-    }
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .header-logo {
-      height: 32px;
-      width: auto;
-      object-fit: contain;
-    }
-    #app-header h1 {
-      font-size: 1.2rem;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-    }
-    #btn-render {
-      background-color: #28a745;
-      color: white;
-      border: none;
-      padding: 8px 18px;
-      font-size: 0.95rem;
-      font-weight: bold;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-    #btn-render:hover {
-      background-color: #218838;
-    }
-    #main-container {
-      display: flex;
-      width: 100vw;
-      height: calc(100vh - 50px);
-    }
-    #blockly-div {
-      width: 55%;
-      height: 100%;
-    }
-    #viewport-container {
-      width: 45%;
-      height: 100%;
-      position: relative;
-      background-color: #141419;
-    }
-    #canvas3d {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-    #code-preview {
-      position: absolute;
-      bottom: 10px;
-      left: 10px;
-      right: 10px;
-      height: 120px;
-      background: rgba(0, 0, 0, 0.75);
-      color: #00ff66;
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 12px;
-      padding: 10px;
-      border-radius: 6px;
-      overflow-y: auto;
-      pointer-events: none;
-      border: 1px solid rgba(255,255,255,0.1);
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body, html { width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    #app-header { height: 50px; background-color: #1e1e2f; color: #ffffff; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); z-index: 10; }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .header-logo { height: 32px; width: auto; object-fit: contain; }
+    #app-header h1 { font-size: 1.2rem; font-weight: 600; letter-spacing: 0.5px; }
+    #btn-render { background-color: #28a745; color: white; border: none; padding: 8px 18px; font-size: 0.95rem; font-weight: bold; border-radius: 4px; cursor: pointer; transition: background-color 0.2s; }
+    #btn-render:hover { background-color: #218838; }
+    #main-container { display: flex; width: 100vw; height: calc(100vh - 50px); }
+    #blockly-div { width: 55%; height: 100%; }
+    #viewport-container { width: 45%; height: 100%; position: relative; background-color: #141419; }
+    #canvas3d { width: 100%; height: 100%; display: block; }
+    #code-preview { position: absolute; bottom: 10px; left: 10px; right: 10px; height: 120px; background: rgba(0, 0, 0, 0.75); color: #00ff66; font-family: 'Courier New', Courier, monospace; font-size: 12px; padding: 10px; border-radius: 6px; overflow-y: auto; pointer-events: none; border: 1px solid rgba(255,255,255,0.1); }
   </style>
 </head>
 <body>
@@ -116,10 +42,7 @@
   </header>
 
   <main id="main-container">
-    <!-- Area Workspace Blockly -->
     <div id="blockly-div"></div>
-
-    <!-- Viewport 3D Canvas -->
     <div id="viewport-container">
       <canvas id="canvas3d"></canvas>
       <pre id="code-preview">// Kode JavaScript tergenerasi akan muncul di sini...</pre>
@@ -146,7 +69,6 @@
   <script>
     const jsGen = javascript.javascriptGenerator || javascriptGenerator;
 
-    // 1. Inisialisasi Toolbox XML
     const toolboxXml = `
       <xml id="toolbox" style="display: none">
         <!-- 1. Bentuk 3D -->
@@ -205,10 +127,18 @@
 
         <!-- 3. Transformasi -->
         <category name="Transformasi" colour="#FF9800">
-          <!-- Ubah Warna (Palet Warna & Transparansi) -->
+          <!-- Ubah Warna dengan Shadow Block Pemilih Palet Warna Visual -->
           <block type="transform_color_palette">
-            <value name="COLOR"><shadow type="colour_picker"><field name="COLOUR">#ff0000</field></shadow></value>
-            <value name="OPACITY"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+            <value name="COLOR">
+              <shadow type="colour_picker">
+                <field name="COLOUR">#ff0000</field>
+              </shadow>
+            </value>
+            <value name="OPACITY">
+              <shadow type="math_number">
+                <field name="NUM">0</field>
+              </shadow>
+            </value>
           </block>
 
           <!-- Translasi -->
@@ -285,7 +215,6 @@
       </xml>
     `;
 
-    // 2. Inject Workspace Blockly
     const workspace = Blockly.inject('blockly-div', {
       toolbox: toolboxXml,
       scrollbars: true,
@@ -293,7 +222,6 @@
       grid: { spacing: 20, length: 3, colour: '#ccc', snap: true }
     });
 
-    // 3. Setup Three.js Engine (Sistem Koordinat Z-Up)
     const canvas = document.getElementById('canvas3d');
     const container = document.getElementById('viewport-container');
     
@@ -312,7 +240,6 @@
     controls.target.set(0, 0, 0);
     controls.enableDamping = true;
 
-    // Lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
     scene.add(ambientLight);
 
@@ -320,16 +247,13 @@
     dirLight.position.set(30, -30, 50);
     scene.add(dirLight);
 
-    // Grid Floor di Bidang XY (Lantai Z = 0)
     const gridHelper = new THREE.GridHelper(100, 50, 0x00ffcc, 0x444455);
     gridHelper.rotation.x = Math.PI / 2;
     scene.add(gridHelper);
 
-    // Sumbu 3D Helper (Merah = X, Hijau = Y, Biru = Z)
     const axesHelper = new THREE.AxesHelper(30);
     scene.add(axesHelper);
 
-    // Group Penampung Objek Render
     const renderGroup = new THREE.Group();
     scene.add(renderGroup);
 
@@ -348,7 +272,6 @@
       renderer.setSize(width, height);
     });
 
-    // 4. Fungsi Utama untuk Memproses Kode Blockly ke Three.js
     function renderScene() {
       while(renderGroup.children.length > 0){ 
         const obj = renderGroup.children[0];
