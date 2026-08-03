@@ -50,21 +50,21 @@
   </main>
 
   <!-- Modul Custom Blocks 3D JS -->
-  <script src="block_cube.js?v=3.0"></script>
-  <script src="block_sphere.js?v=3.0"></script>
-  <script src="block_cylinder.js?v=3.0"></script>
-  <script src="block_torus.js?v=3.0"></script>
+  <script src="block_cube.js?v=5.0"></script>
+  <script src="block_sphere.js?v=5.0"></script>
+  <script src="block_cylinder.js?v=5.0"></script>
+  <script src="block_torus.js?v=5.0"></script>
 
   <!-- Modul Custom Blocks 2D JS -->
-  <script src="block_circle.js?v=3.0"></script>
-  <script src="block_square.js?v=3.0"></script>
+  <script src="block_circle.js?v=5.0"></script>
+  <script src="block_square.js?v=5.0"></script>
 
   <!-- Modul Custom Blocks Transformasi JS -->
-  <script src="block_color.js?v=3.0"></script>
-  <script src="block_translate.js?v=3.0"></script>
-  <script src="block_rotate.js?v=3.0"></script>
-  <script src="block_scale.js?v=3.0"></script>
-  <script src="block_mirror.js?v=3.0"></script>
+  <script src="block_color.js?v=5.0"></script>
+  <script src="block_translate.js?v=5.0"></script>
+  <script src="block_rotate.js?v=5.0"></script>
+  <script src="block_scale.js?v=5.0"></script>
+  <script src="block_mirror.js?v=5.0"></script>
 
   <script>
     const jsGen = javascript.javascriptGenerator || javascriptGenerator;
@@ -127,7 +127,13 @@
 
         <!-- 3. Transformasi -->
         <category name="Transformasi" colour="#FF9800">
+          <!-- Ubah Warna dengan Shadow Block Pemilih Warna Visual -->
           <block type="transform_color_palette">
+            <value name="COLOR">
+              <shadow type="colour_picker">
+                <field name="COLOUR">#ff0000</field>
+              </shadow>
+            </value>
             <value name="OPACITY">
               <shadow type="math_number"><field name="NUM">0</field></shadow>
             </value>
