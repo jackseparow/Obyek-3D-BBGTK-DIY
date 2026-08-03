@@ -49,7 +49,7 @@
     </div>
   </main>
 
-  <!-- Modul Shapes JS (3D & 2D) -->
+  <!-- Modul Shapes JS (3D & 2D) jika dipisah file -->
   <script src="block_cube.js"></script>
   <script src="block_sphere.js"></script>
   <script src="block_cylinder.js"></script>
@@ -57,8 +57,24 @@
   <script src="block_circle.js"></script>
   <script src="block_square.js"></script>
 
-  <!-- INLINE BLOK TRANSFORMASI UNTUK MEMASTIKAN LANGSUNG MUNCUL -->
+  <!-- DEFINISI PEMILIH WARNA & TRANSFORMASI -->
   <script>
+    // FIX UNTUK COLOUR_PICKER DI BLOCKLY BARU
+    if (!Blockly.Blocks['colour_picker']) {
+      Blockly.Blocks['colour_picker'] = {
+        init: function() {
+          this.appendDummyInput()
+              .appendField(new Blockly.FieldTextInput('#ff0000'), 'COLOUR');
+          this.setOutput(true, 'Colour');
+          this.setColour('#FF9800');
+        }
+      };
+      javascript.javascriptGenerator.forBlock['colour_picker'] = function(block) {
+        var colour = block.getFieldValue('COLOUR') || '#ff0000';
+        return [`'${colour}'`, javascript.javascriptGenerator.ORDER_ATOMIC];
+      };
+    }
+
     // 1. Ubah Warna
     Blockly.Blocks['transform_color'] = {
       init: function() {
