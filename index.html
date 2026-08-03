@@ -122,21 +122,27 @@
   <script>
     const jsGen = javascript.javascriptGenerator || javascriptGenerator;
 
-    // 1. Inisialisasi Toolbox dengan Shadow Blocks (Isian Bawaan Angka)
+    // 1. Inisialisasi Toolbox dengan Shadow Blocks Default
     const toolboxXml = `
       <xml id="toolbox" style="display: none">
         <!-- 1. Bentuk 3D -->
         <category name="Bentuk 3D" colour="#4C97FF">
           <!-- Kubus Default -->
           <block type="shape_cube">
-            <value name="X"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
-            <value name="Y"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
-            <value name="Z"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+            <value name="SIZE_X"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+            <value name="SIZE_Y"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+            <value name="SIZE_Z"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+            <value name="POS_X"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+            <value name="POS_Y"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+            <value name="POS_Z"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
           </block>
 
           <!-- Bola Default -->
           <block type="shape_sphere">
             <value name="RADIUS"><shadow type="math_number"><field name="NUM">5</field></shadow></value>
+            <value name="POS_X"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+            <value name="POS_Y"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+            <value name="POS_Z"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
           </block>
 
           <!-- Silinder Default -->
@@ -144,45 +150,39 @@
             <value name="RADIUS_TOP"><shadow type="math_number"><field name="NUM">5</field></shadow></value>
             <value name="RADIUS_BOTTOM"><shadow type="math_number"><field name="NUM">5</field></shadow></value>
             <value name="HEIGHT"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+            <value name="POS_X"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+            <value name="POS_Y"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+            <value name="POS_Z"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
           </block>
 
           <!-- Torus Default -->
           <block type="shape_torus">
             <value name="RADIUS"><shadow type="math_number"><field name="NUM">8</field></shadow></value>
             <value name="TUBE"><shadow type="math_number"><field name="NUM">3</field></shadow></value>
+            <value name="POS_X"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+            <value name="POS_Y"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+            <value name="POS_Z"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
           </block>
         </category>
 
-        <!-- 2. Bentuk 2D -->
+        <!-- Kategori Lainnya -->
         <category name="Bentuk 2D" colour="#9C27B0"></category>
-
-        <!-- 3. Transformasi -->
         <category name="Transformasi" colour="#FF9800"></category>
-
-        <!-- 4. Operasi Himpunan -->
         <category name="Operasi Himpunan" colour="#E91E63"></category>
-
-        <!-- 5. Operasi Aritmetika -->
         <category name="Operasi Aritmetika" colour="#5B80A5">
           <block type="math_number"><field name="NUM">10</field></block>
           <block type="math_arithmetic"></block>
           <block type="math_single"></block>
         </category>
-
-        <!-- 6. Logika -->
         <category name="Logika" colour="#5C81A6">
           <block type="controls_if"></block>
           <block type="logic_compare"></block>
           <block type="logic_operation"></block>
           <block type="logic_boolean"></block>
         </category>
-
-        <!-- 7. Iterasi -->
         <category name="Iterasi" colour="#5CA65C">
           <block type="controls_repeat_ext">
-            <value name="TIMES">
-              <block type="math_number"><field name="NUM">10</field></block>
-            </value>
+            <value name="TIMES"><block type="math_number"><field name="NUM">10</field></block></value>
           </block>
           <block type="controls_for">
             <value name="FROM"><block type="math_number"><field name="NUM">1</field></block></value>
@@ -190,11 +190,7 @@
             <value name="BY"><block type="math_number"><field name="NUM">1</field></block></value>
           </block>
         </category>
-
-        <!-- 8. Variabel -->
         <category name="Variabel" colour="#A55B80" custom="VARIABLE"></category>
-
-        <!-- 9. Teks -->
         <category name="Teks" colour="#5BA58C">
           <block type="text"></block>
           <block type="text_join"></block>
@@ -235,11 +231,11 @@
     dirLight.position.set(20, 40, 20);
     scene.add(dirLight);
 
-    // Grid Floor (Bidang XZ)
+    // Grid Floor
     const gridHelper = new THREE.GridHelper(100, 50, 0x444455, 0x333344);
     scene.add(gridHelper);
 
-    // Sumbu 3D Axes Helper (X = Merah, Y = Hijau, Z = Biru)
+    // Sumbu 3D Helper (X = Merah, Y = Hijau, Z = Biru)
     const axesHelper = new THREE.AxesHelper(30);
     scene.add(axesHelper);
 
