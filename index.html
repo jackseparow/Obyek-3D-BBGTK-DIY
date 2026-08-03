@@ -49,7 +49,7 @@
     </div>
   </main>
 
-  <!-- Modul Shapes JS (3D & 2D) jika dipisah file -->
+  <!-- Modul Shapes JS (3D & 2D) -->
   <script src="block_cube.js"></script>
   <script src="block_sphere.js"></script>
   <script src="block_cylinder.js"></script>
@@ -57,7 +57,7 @@
   <script src="block_circle.js"></script>
   <script src="block_square.js"></script>
 
-  <!-- DEFINISI PEMILIH WARNA & TRANSFORMASI -->
+  <!-- INLINE BLOK TRANSFORMASI & UTILITIES -->
   <script>
     // FIX UNTUK COLOUR_PICKER DI BLOCKLY BARU
     if (!Blockly.Blocks['colour_picker']) {
@@ -117,7 +117,7 @@
       return `\n(function() {\n  const subGroup = new THREE.Group();\n  const parentGroup = sceneGroup;\n  sceneGroup = subGroup;\n  ${statement}\n  sceneGroup = parentGroup;\n  subGroup.position.set(Number(${x}), Number(${y}), Number(${z}));\n  sceneGroup.add(subGroup);\n})();\n`;
     };
 
-    // 3. Rotasi
+    // 3. Rotasi Sumbu Utama
     Blockly.Blocks['transform_rotate'] = {
       init: function() {
         this.appendDummyInput().appendField("rotasikan");
@@ -204,14 +204,17 @@
       return `\n(function() {\n  const subGroup = new THREE.Group();\n  const parentGroup = sceneGroup;\n  sceneGroup = subGroup;\n  ${statement}\n  sceneGroup = parentGroup;\n  if ("${plane}" === "XY") subGroup.scale.z *= -1;\n  if ("${plane}" === "XZ") subGroup.scale.y *= -1;\n  if ("${plane}" === "YZ") subGroup.scale.x *= -1;\n  sceneGroup.add(subGroup);\n})();\n`;
     };
 
-    // 7. Pencerminan Titik & Rotasi
-    Blockly.Blocks['transform_mirror_point_rotate'] = {
+    // 7. Pencerminan Terhadap Garis
+    Blockly.Blocks['transform_mirror_line'] = {
       init: function() {
-        this.appendDummyInput().appendField("cerminkan terhadap koordinat");
-        this.appendValueInput("POS_X").setCheck("Number").appendField("x");
-        this.appendValueInput("POS_Y").setCheck("Number").appendField("y");
-        this.appendValueInput("POS_Z").setCheck("Number").appendField("z");
-        this.appendValueInput("ANGLE").setCheck("Number").appendField("dan rotasikan (°)");
+        this.appendDummyInput().appendField("cerminkan terhadap garis dari titik");
+        this.appendValueInput("X1").setCheck("Number").appendField("x1");
+        this.appendValueInput("Y1").setCheck("Number").appendField("y1");
+        this.appendValueInput("Z1").setCheck("Number").appendField("z1");
+        this.appendDummyInput().appendField("ke titik");
+        this.appendValueInput("X2").setCheck("Number").appendField("x2");
+        this.appendValueInput("Y2").setCheck("Number").appendField("y2");
+        this.appendValueInput("Z2").setCheck("Number").appendField("z2");
         this.appendStatementInput("OBJECTS").appendField("objek");
         this.setInputsInline(true);
         this.setPreviousStatement(true, null);
@@ -219,13 +222,16 @@
         this.setColour("#FF9800");
       }
     };
-    javascript.javascriptGenerator.forBlock['transform_mirror_point_rotate'] = function(block, generator) {
-      var px = generator.valueToCode(block, 'POS_X', generator.ORDER_ATOMIC) || '0';
-      var py = generator.valueToCode(block, 'POS_Y', generator.ORDER_ATOMIC) || '0';
-      var pz = generator.valueToCode(block, 'POS_Z', generator.ORDER_ATOMIC) || '0';
-      var angle = generator.valueToCode(block, 'ANGLE', generator.ORDER_ATOMIC) || '0';
+    javascript.javascriptGenerator.forBlock['transform_mirror_line'] = function(block, generator) {
+      var x1 = generator.valueToCode(block, 'X1', generator.ORDER_ATOMIC) || '0';
+      var y1 = generator.valueToCode(block, 'Y1', generator.ORDER_ATOMIC) || '0';
+      var z1 = generator.valueToCode(block, 'Z1', generator.ORDER_ATOMIC) || '0';
+      var x2 = generator.valueToCode(block, 'X2', generator.ORDER_ATOMIC) || '10';
+      var y2 = generator.valueToCode(block, 'Y2', generator.ORDER_ATOMIC) || '0';
+      var z2 = generator.valueToCode(block, 'Z2', generator.ORDER_ATOMIC) || '0';
       var statement = generator.statementToCode(block, 'OBJECTS');
-      return `\n(function() {\n  const subGroup = new THREE.Group();\n  const parentGroup = sceneGroup;\n  sceneGroup = subGroup;\n  ${statement}\n  sceneGroup = parentGroup;\n  const center = new THREE.Vector3(Number(${px}), Number(${py}), Number(${pz}));\n  const rad = (Number(${angle}) * Math.PI) / 180;\n  subGroup.position.sub(center);\n  subGroup.scale.set(-1, -1, -1);\n  subGroup.rotation.z += rad;\n  subGroup.position.add(center);\n  sceneGroup.add(subGroup);\n})();\n`;
+
+      return `\n(function() {\n  const subGroup = new THREE.Group();\n  const parentGroup = sceneGroup;\n  sceneGroup = subGroup;\n  ${statement}\n  sceneGroup = parentGroup;\n  const p1 = new THREE.Vector3(Number(${x1}), Number(${y1}), Number(${z1}));\n  const p2 = new THREE.Vector3(Number(${x2}), Number(${y2}), Number(${z2}));\n  const axis = new THREE.Vector3().subVectors(p2, p1).normalize();\n  if (axis.lengthSq() > 0) {\n    subGroup.position.sub(p1);\n    subGroup.position.applyAxisAngle(axis, Math.PI);\n    subGroup.rotateOnAxis(axis, Math.PI);\n    subGroup.position.add(p1);\n  }\n  sceneGroup.add(subGroup);\n})();\n`;
     };
   </script>
 
@@ -235,6 +241,7 @@
 
     const toolboxXml = `
       <xml id="toolbox" style="display: none">
+        <!-- 1. Bentuk 3D -->
         <category name="Bentuk 3D" colour="#4C97FF">
           <block type="shape_cube">
             <value name="SIZE_X"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
@@ -267,6 +274,7 @@
           </block>
         </category>
 
+        <!-- 2. Bentuk 2D -->
         <category name="Bentuk 2D" colour="#9C27B0">
           <block type="shape_circle">
             <value name="RADIUS"><shadow type="math_number"><field name="NUM">5</field></shadow></value>
@@ -283,6 +291,7 @@
           </block>
         </category>
 
+        <!-- 3. Transformasi -->
         <category name="Transformasi" colour="#FF9800">
           <block type="transform_color">
             <value name="COLOR"><shadow type="colour_picker"><field name="COLOUR">#ff0000</field></shadow></value>
@@ -310,14 +319,17 @@
             <value name="Z"><shadow type="math_number"><field name="NUM">2</field></shadow></value>
           </block>
           <block type="transform_mirror_plane"></block>
-          <block type="transform_mirror_point_rotate">
-            <value name="POS_X"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
-            <value name="POS_Y"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
-            <value name="POS_Z"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
-            <value name="ANGLE"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+          <block type="transform_mirror_line">
+            <value name="X1"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+            <value name="Y1"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+            <value name="Z1"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+            <value name="X2"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+            <value name="Y2"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+            <value name="Z2"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
           </block>
         </category>
 
+        <!-- Kategori Pendukung Lainnya -->
         <category name="Operasi Himpunan" colour="#E91E63"></category>
         <category name="Operasi Aritmetika" colour="#5B80A5">
           <block type="math_number"><field name="NUM">10</field></block>
