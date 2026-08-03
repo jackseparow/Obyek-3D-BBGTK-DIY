@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BlocksCAD Clone - 3D Block Coding</title>
+  <title>GeoBlock BBGTK DIY - 3D Visual Block Coding</title>
   
   <!-- Blockly CDN Core & Generators -->
   <script src="https://unpkg.com/blockly/blockly_compressed.js"></script>
@@ -41,6 +41,7 @@
     #app-header h1 {
       font-size: 1.2rem;
       font-weight: 600;
+      letter-spacing: 0.5px;
     }
     #btn-render {
       background-color: #28a745;
@@ -97,19 +98,22 @@
 <body>
 
   <header id="app-header">
-    <h1>BlocksCAD Visual 3D Engine</h1>
+    <h1>GeoBlock BBGTK DIY</h1>
     <button id="btn-render" onclick="renderScene()">Render 3D Kode</button>
   </header>
 
   <main id="main-container">
+    <!-- Area Workspace Blockly -->
     <div id="blockly-div"></div>
+
+    <!-- Viewport 3D Canvas -->
     <div id="viewport-container">
       <canvas id="canvas3d"></canvas>
       <pre id="code-preview">// Kode JavaScript tergenerasi akan muncul di sini...</pre>
     </div>
   </main>
 
-  <!-- Load Modul Custom Blocks 3D -->
+  <!-- Modul Custom Blocks JS -->
   <script src="block_cube.js"></script>
   <script src="block_sphere.js"></script>
   <script src="block_cylinder.js"></script>
@@ -118,19 +122,73 @@
     // Inisialisasi Generator JS Compatibility
     const jsGen = javascript.javascriptGenerator || javascriptGenerator;
 
-    // 1. Inisialisasi Toolbox XML
+    // 1. Inisialisasi Kategori Utama
     const toolboxXml = `
       <xml id="toolbox" style="display: none">
+        <!-- 1. Bentuk 3D -->
         <category name="Bentuk 3D" colour="#4C97FF">
           <block type="shape_cube"></block>
           <block type="shape_sphere"></block>
           <block type="shape_cylinder"></block>
         </category>
-        <category name="Matematika" colour="#5B80A5">
-          <block type="math_number"><field name="NUM">10</field></block>
+
+        <!-- 2. Bentuk 2D -->
+        <category name="Bentuk 2D" colour="#9C27B0">
+          <!-- Blok 2D akan kita tambahkan berikutnya -->
         </category>
-        <category name="Warna" colour="#5BA5A5">
-          <block type="colour_picker"><field name="COLOUR">#4c97ff</field></block>
+
+        <!-- 3. Transformasi -->
+        <category name="Transformasi" colour="#FF9800">
+          <!-- Translasikan, Rotasikan, Skala -->
+        </category>
+
+        <!-- 4. Operasi Himpunan (CSG / Boolean) -->
+        <category name="Operasi Himpunan" colour="#E91E63">
+          <!-- Gabungan (Union), Irisan (Intersection), Selisih (Difference) -->
+        </category>
+
+        <!-- 5. Operasi Aritmetika -->
+        <category name="Operasi Aritmetika" colour="#5B80A5">
+          <block type="math_number"><field name="NUM">10</field></block>
+          <block type="math_arithmetic"></block>
+          <block type="math_single"></block>
+        </category>
+
+        <!-- 6. Logika -->
+        <category name="Logika" colour="#5C81A6">
+          <block type="controls_if"></block>
+          <block type="logic_compare"></block>
+          <block type="logic_operation"></block>
+          <block type="logic_boolean"></block>
+        </category>
+
+        <!-- 7. Iterasi -->
+        <category name="Iterasi" colour="#5CA65C">
+          <block type="controls_repeat_ext">
+            <value name="TIMES">
+              <block type="math_number"><field name="NUM">10</field></block>
+            </value>
+          </block>
+          <block type="controls_for">
+            <value name="FROM">
+              <block type="math_number"><field name="NUM">1</field></block>
+            </value>
+            <value name="TO">
+              <block type="math_number"><field name="NUM">10</field></block>
+            </value>
+            <value name="BY">
+              <block type="math_number"><field name="NUM">1</field></block>
+            </value>
+          </block>
+        </category>
+
+        <!-- 8. Variabel -->
+        <category name="Variabel" colour="#A55B80" custom="VARIABLE"></category>
+
+        <!-- 9. Teks -->
+        <category name="Teks" colour="#5BA58C">
+          <block type="text"></block>
+          <block type="text_join"></block>
         </category>
       </xml>
     `;
