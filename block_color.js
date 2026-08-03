@@ -5,7 +5,7 @@
 
 Blockly.Blocks['transform_color_palette'] = {
   init: function() {
-    // KUNCI PERBAIKAN: appendField digabung langsung ke appendDummyInput()
+    // PERBAIKAN: .appendField() ditempelkan langsung ke .appendDummyInput()
     this.appendDummyInput()
         .appendField("ubah warna")
         .appendField(new Blockly.FieldColour("#ff0000"), "COLOR");
@@ -21,7 +21,7 @@ Blockly.Blocks['transform_color_palette'] = {
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour("#FF9800");
-    this.setTooltip("Klik kotak warna untuk memilih palet warna visual dan menentukan transparansi (0-100%)");
+    this.setTooltip("Klik kotak warna untuk memilih warna dan tentukan tingkat transparansinya (0-100%)");
   }
 };
 
