@@ -103,7 +103,7 @@
   </header>
 
   <main id="main-container">
-    <!-- Area Workspace Blockly -->
+    <!-- Workspace Blockly -->
     <div id="blockly-div"></div>
 
     <!-- Viewport 3D Canvas -->
@@ -113,38 +113,54 @@
     </div>
   </main>
 
-  <!-- Modul Custom Blocks JS (Kategori Bentuk 3D) -->
+  <!-- Modul Custom Blocks JS -->
   <script src="block_cube.js"></script>
   <script src="block_sphere.js"></script>
   <script src="block_cylinder.js"></script>
   <script src="block_torus.js"></script>
 
   <script>
-    // Inisialisasi Generator JS Compatibility
     const jsGen = javascript.javascriptGenerator || javascriptGenerator;
 
-    // 1. Inisialisasi Kategori Utama
+    // 1. Inisialisasi Toolbox dengan Shadow Blocks (Isian Bawaan Angka)
     const toolboxXml = `
       <xml id="toolbox" style="display: none">
         <!-- 1. Bentuk 3D -->
         <category name="Bentuk 3D" colour="#4C97FF">
-          <block type="shape_cube"></block>
-          <block type="shape_sphere"></block>
-          <block type="shape_cylinder"></block>
-          <block type="shape_torus"></block>
+          <!-- Kubus Default -->
+          <block type="shape_cube">
+            <value name="X"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+            <value name="Y"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+            <value name="Z"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+          </block>
+
+          <!-- Bola Default -->
+          <block type="shape_sphere">
+            <value name="RADIUS"><shadow type="math_number"><field name="NUM">5</field></shadow></value>
+          </block>
+
+          <!-- Silinder Default -->
+          <block type="shape_cylinder">
+            <value name="RADIUS_TOP"><shadow type="math_number"><field name="NUM">5</field></shadow></value>
+            <value name="RADIUS_BOTTOM"><shadow type="math_number"><field name="NUM">5</field></shadow></value>
+            <value name="HEIGHT"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+          </block>
+
+          <!-- Torus Default -->
+          <block type="shape_torus">
+            <value name="RADIUS"><shadow type="math_number"><field name="NUM">8</field></shadow></value>
+            <value name="TUBE"><shadow type="math_number"><field name="NUM">3</field></shadow></value>
+          </block>
         </category>
 
         <!-- 2. Bentuk 2D -->
-        <category name="Bentuk 2D" colour="#9C27B0">
-        </category>
+        <category name="Bentuk 2D" colour="#9C27B0"></category>
 
         <!-- 3. Transformasi -->
-        <category name="Transformasi" colour="#FF9800">
-        </category>
+        <category name="Transformasi" colour="#FF9800"></category>
 
         <!-- 4. Operasi Himpunan -->
-        <category name="Operasi Himpunan" colour="#E91E63">
-        </category>
+        <category name="Operasi Himpunan" colour="#E91E63"></category>
 
         <!-- 5. Operasi Aritmetika -->
         <category name="Operasi Aritmetika" colour="#5B80A5">
@@ -169,15 +185,9 @@
             </value>
           </block>
           <block type="controls_for">
-            <value name="FROM">
-              <block type="math_number"><field name="NUM">1</field></block>
-            </value>
-            <value name="TO">
-              <block type="math_number"><field name="NUM">10</field></block>
-            </value>
-            <value name="BY">
-              <block type="math_number"><field name="NUM">1</field></block>
-            </value>
+            <value name="FROM"><block type="math_number"><field name="NUM">1</field></block></value>
+            <value name="TO"><block type="math_number"><field name="NUM">10</field></block></value>
+            <value name="BY"><block type="math_number"><field name="NUM">1</field></block></value>
           </block>
         </category>
 
@@ -196,20 +206,8 @@
     const workspace = Blockly.inject('blockly-div', {
       toolbox: toolboxXml,
       scrollbars: true,
-      zoom: {
-        controls: true,
-        wheel: true,
-        startScale: 1.0,
-        maxScale: 3,
-        minScale: 0.3,
-        scaleSpeed: 1.2
-      },
-      grid: {
-        spacing: 20,
-        length: 3,
-        colour: '#ccc',
-        snap: true
-      }
+      zoom: { controls: true, wheel: true, startScale: 1.0, maxScale: 3, minScale: 0.3, scaleSpeed: 1.2 },
+      grid: { spacing: 20, length: 3, colour: '#ccc', snap: true }
     });
 
     // 3. Setup Three.js Engine
@@ -229,7 +227,7 @@
     const controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
 
-    // Pencahayaan
+    // Lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
     scene.add(ambientLight);
 
@@ -237,11 +235,15 @@
     dirLight.position.set(20, 40, 20);
     scene.add(dirLight);
 
-    // Grid Floor
-    const gridHelper = new THREE.GridHelper(100, 50, 0x00ffcc, 0x444455);
+    // Grid Floor (Bidang XZ)
+    const gridHelper = new THREE.GridHelper(100, 50, 0x444455, 0x333344);
     scene.add(gridHelper);
 
-    // Group Penampung Objek Render
+    // Sumbu 3D Axes Helper (X = Merah, Y = Hijau, Z = Biru)
+    const axesHelper = new THREE.AxesHelper(30);
+    scene.add(axesHelper);
+
+    // Group Penampung Mesh
     const renderGroup = new THREE.Group();
     scene.add(renderGroup);
 
