@@ -116,7 +116,7 @@
   </header>
 
   <main id="main-container">
-    <!-- Area Workspace Blockly -->
+    <!-- Workspace Blockly -->
     <div id="blockly-div"></div>
 
     <!-- Viewport 3D Canvas -->
@@ -126,13 +126,11 @@
     </div>
   </main>
 
-  <!-- Modul Custom Blocks 3D JS -->
+  <!-- Modul Custom Blocks JS -->
   <script src="block_cube.js"></script>
   <script src="block_sphere.js"></script>
   <script src="block_cylinder.js"></script>
   <script src="block_torus.js"></script>
-
-  <!-- Modul Custom Blocks 2D JS -->
   <script src="block_circle.js"></script>
   <script src="block_square.js"></script>
 
@@ -142,7 +140,7 @@
     // 1. Inisialisasi Toolbox dengan Shadow Blocks Default
     const toolboxXml = `
       <xml id="toolbox" style="display: none">
-        <!-- 1. Bentuk 3D -->
+        <!-- Bentuk 3D -->
         <category name="Bentuk 3D" colour="#4C97FF">
           <block type="shape_cube">
             <value name="SIZE_X"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
@@ -178,7 +176,7 @@
           </block>
         </category>
 
-        <!-- 2. Bentuk 2D -->
+        <!-- Bentuk 2D -->
         <category name="Bentuk 2D" colour="#9C27B0">
           <block type="shape_circle">
             <value name="RADIUS"><shadow type="math_number"><field name="NUM">5</field></shadow></value>
@@ -196,28 +194,20 @@
           </block>
         </category>
 
-        <!-- 3. Transformasi -->
+        <!-- Kategori Pendukung Lainnya -->
         <category name="Transformasi" colour="#FF9800"></category>
-
-        <!-- 4. Operasi Himpunan -->
         <category name="Operasi Himpunan" colour="#E91E63"></category>
-
-        <!-- 5. Operasi Aritmetika -->
         <category name="Operasi Aritmetika" colour="#5B80A5">
           <block type="math_number"><field name="NUM">10</field></block>
           <block type="math_arithmetic"></block>
           <block type="math_single"></block>
         </category>
-
-        <!-- 6. Logika -->
         <category name="Logika" colour="#5C81A6">
           <block type="controls_if"></block>
           <block type="logic_compare"></block>
           <block type="logic_operation"></block>
           <block type="logic_boolean"></block>
         </category>
-
-        <!-- 7. Iterasi -->
         <category name="Iterasi" colour="#5CA65C">
           <block type="controls_repeat_ext">
             <value name="TIMES"><block type="math_number"><field name="NUM">10</field></block></value>
@@ -228,11 +218,7 @@
             <value name="BY"><block type="math_number"><field name="NUM">1</field></block></value>
           </block>
         </category>
-
-        <!-- 8. Variabel -->
         <category name="Variabel" colour="#A55B80" custom="VARIABLE"></category>
-
-        <!-- 9. Teks -->
         <category name="Teks" colour="#5BA58C">
           <block type="text"></block>
           <block type="text_join"></block>
@@ -248,17 +234,20 @@
       grid: { spacing: 20, length: 3, colour: '#ccc', snap: true }
     });
 
-    // 3. Setup Three.js Engine dengan Orientasi Z-UP
+    // 3. Setup Three.js Engine (NATIVE Z-UP CONFIGURATION)
+    // Mengatur default up vector Three.js ke sumbu Z
+    THREE.Object3D.DEFAULT_UP.set(0, 0, 1);
+
     const canvas = document.getElementById('canvas3d');
     const container = document.getElementById('viewport-container');
     
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x1e1e24);
 
-    // Mengatur World Up Vector milik Kamera ke Sumbu Z (Z = Up)
+    // Kamera dengan orientasi Z-up
     const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
     camera.up.set(0, 0, 1);
-    camera.position.set(40, -50, 40);
+    camera.position.set(30, -40, 40);
 
     const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
     renderer.setSize(container.clientWidth, container.clientHeight);
@@ -272,19 +261,19 @@
     scene.add(ambientLight);
 
     const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    dirLight.position.set(20, -40, 50);
+    dirLight.position.set(20, -30, 50);
     scene.add(dirLight);
 
-    // Grid Floor di Bidang XY (Lantai)
+    // Grid Floor di bidang XY (Lantai dasar Z = 0)
     const gridHelper = new THREE.GridHelper(100, 50, 0x444455, 0x333344);
-    gridHelper.rotation.x = Math.PI / 2; // Menjadikan grid berada di alas XY
+    gridHelper.rotation.x = Math.PI / 2; // Memutar grid agar terletak di bidang XY
     scene.add(gridHelper);
 
-    // Sumbu 3D Helper (X = Merah, Y = Hijau, Z = Biru [Mengarah ke atas])
+    // Sumbu 3D Helper (X = Merah, Y = Hijau, Z = Biru [Tegak Lurus ke Atas])
     const axesHelper = new THREE.AxesHelper(30);
     scene.add(axesHelper);
 
-    // Group Penampung Mesh
+    // Group Penampung Mesh (Tanpa rotasi group sama sekali)
     const renderGroup = new THREE.Group();
     scene.add(renderGroup);
 
