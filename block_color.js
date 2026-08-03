@@ -5,10 +5,18 @@
 
 Blockly.Blocks['transform_color_palette'] = {
   init: function() {
-    // appendField harus disambung langsung setelah appendDummyInput()
+    // Menggunakan FieldTextInput yang diformat sebagai Pemilih Warna Visual
+    // Jika Blockly.FieldColour ada, gunakan. Jika tidak, gunakan FieldTextInput warna yang sangat stabil.
+    var colorField;
+    if (typeof Blockly.FieldColour === 'function') {
+      colorField = new Blockly.FieldColour('#ff0000');
+    } else {
+      colorField = new Blockly.FieldTextInput('#ff0000');
+    }
+
     this.appendDummyInput()
         .appendField("ubah warna")
-        .appendField(new Blockly.FieldColour("#ff0000"), "COLOR");
+        .appendField(colorField, "COLOR");
 
     this.appendValueInput("OPACITY")
         .setCheck("Number")
@@ -21,7 +29,7 @@ Blockly.Blocks['transform_color_palette'] = {
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour("#FF9800");
-    this.setTooltip("Klik kotak warna untuk memilih palet warna dan tentukan tingkat transparansinya (0-100%)");
+    this.setTooltip("Pilih warna dan tingkat transparansinya (0-100%)");
   }
 };
 
