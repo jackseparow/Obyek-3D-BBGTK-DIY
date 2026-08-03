@@ -139,12 +139,11 @@
   <script>
     const jsGen = javascript.javascriptGenerator || javascriptGenerator;
 
-    // 1. Inisialisasi Toolbox dengan Shadow Blocks (Isian Bawaan)
+    // 1. Inisialisasi Toolbox dengan Shadow Blocks Default
     const toolboxXml = `
       <xml id="toolbox" style="display: none">
         <!-- 1. Bentuk 3D -->
         <category name="Bentuk 3D" colour="#4C97FF">
-          <!-- Kubus Default -->
           <block type="shape_cube">
             <value name="SIZE_X"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
             <value name="SIZE_Y"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
@@ -154,7 +153,6 @@
             <value name="POS_Z"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
           </block>
 
-          <!-- Bola Default -->
           <block type="shape_sphere">
             <value name="RADIUS"><shadow type="math_number"><field name="NUM">5</field></shadow></value>
             <value name="POS_X"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
@@ -162,7 +160,6 @@
             <value name="POS_Z"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
           </block>
 
-          <!-- Silinder Default -->
           <block type="shape_cylinder">
             <value name="RADIUS_TOP"><shadow type="math_number"><field name="NUM">5</field></shadow></value>
             <value name="RADIUS_BOTTOM"><shadow type="math_number"><field name="NUM">5</field></shadow></value>
@@ -172,7 +169,6 @@
             <value name="POS_Z"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
           </block>
 
-          <!-- Torus Default -->
           <block type="shape_torus">
             <value name="RADIUS"><shadow type="math_number"><field name="NUM">8</field></shadow></value>
             <value name="TUBE"><shadow type="math_number"><field name="NUM">3</field></shadow></value>
@@ -184,7 +180,6 @@
 
         <!-- 2. Bentuk 2D -->
         <category name="Bentuk 2D" colour="#9C27B0">
-          <!-- Lingkaran 2D -->
           <block type="shape_circle">
             <value name="RADIUS"><shadow type="math_number"><field name="NUM">5</field></shadow></value>
             <value name="POS_X"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
@@ -192,7 +187,6 @@
             <value name="POS_Z"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
           </block>
 
-          <!-- Persegi 2D -->
           <block type="shape_square">
             <value name="SIZE_X"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
             <value name="SIZE_Y"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
@@ -254,15 +248,17 @@
       grid: { spacing: 20, length: 3, colour: '#ccc', snap: true }
     });
 
-    // 3. Setup Three.js Engine
+    // 3. Setup Three.js Engine dengan Orientasi Z-UP
     const canvas = document.getElementById('canvas3d');
     const container = document.getElementById('viewport-container');
     
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x1e1e24);
 
+    // Mengatur World Up Vector milik Kamera ke Sumbu Z (Z = Up)
     const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
-    camera.position.set(30, 40, 50);
+    camera.up.set(0, 0, 1);
+    camera.position.set(40, -50, 40);
 
     const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
     renderer.setSize(container.clientWidth, container.clientHeight);
@@ -276,14 +272,15 @@
     scene.add(ambientLight);
 
     const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    dirLight.position.set(20, 40, 20);
+    dirLight.position.set(20, -40, 50);
     scene.add(dirLight);
 
-    // Grid Floor (Bidang XZ)
+    // Grid Floor di Bidang XY (Lantai)
     const gridHelper = new THREE.GridHelper(100, 50, 0x444455, 0x333344);
+    gridHelper.rotation.x = Math.PI / 2; // Menjadikan grid berada di alas XY
     scene.add(gridHelper);
 
-    // Sumbu 3D Helper (X = Merah, Y = Hijau, Z = Biru)
+    // Sumbu 3D Helper (X = Merah, Y = Hijau, Z = Biru [Mengarah ke atas])
     const axesHelper = new THREE.AxesHelper(30);
     scene.add(axesHelper);
 
