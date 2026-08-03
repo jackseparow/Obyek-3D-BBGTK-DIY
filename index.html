@@ -116,7 +116,7 @@
   </header>
 
   <main id="main-container">
-    <!-- Workspace Blockly -->
+    <!-- Area Workspace Blockly -->
     <div id="blockly-div"></div>
 
     <!-- Viewport 3D Canvas -->
@@ -126,16 +126,20 @@
     </div>
   </main>
 
-  <!-- Modul Custom Blocks JS -->
+  <!-- Modul Custom Blocks 3D JS -->
   <script src="block_cube.js"></script>
   <script src="block_sphere.js"></script>
   <script src="block_cylinder.js"></script>
   <script src="block_torus.js"></script>
 
+  <!-- Modul Custom Blocks 2D JS -->
+  <script src="block_circle.js"></script>
+  <script src="block_square.js"></script>
+
   <script>
     const jsGen = javascript.javascriptGenerator || javascriptGenerator;
 
-    // 1. Inisialisasi Toolbox dengan Shadow Blocks Default
+    // 1. Inisialisasi Toolbox dengan Shadow Blocks (Isian Bawaan)
     const toolboxXml = `
       <xml id="toolbox" style="display: none">
         <!-- 1. Bentuk 3D -->
@@ -178,21 +182,48 @@
           </block>
         </category>
 
-        <!-- Kategori Lainnya -->
-        <category name="Bentuk 2D" colour="#9C27B0"></category>
+        <!-- 2. Bentuk 2D -->
+        <category name="Bentuk 2D" colour="#9C27B0">
+          <!-- Lingkaran 2D -->
+          <block type="shape_circle">
+            <value name="RADIUS"><shadow type="math_number"><field name="NUM">5</field></shadow></value>
+            <value name="POS_X"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+            <value name="POS_Y"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+            <value name="POS_Z"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+          </block>
+
+          <!-- Persegi 2D -->
+          <block type="shape_square">
+            <value name="SIZE_X"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+            <value name="SIZE_Y"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+            <value name="POS_X"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+            <value name="POS_Y"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+            <value name="POS_Z"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+          </block>
+        </category>
+
+        <!-- 3. Transformasi -->
         <category name="Transformasi" colour="#FF9800"></category>
+
+        <!-- 4. Operasi Himpunan -->
         <category name="Operasi Himpunan" colour="#E91E63"></category>
+
+        <!-- 5. Operasi Aritmetika -->
         <category name="Operasi Aritmetika" colour="#5B80A5">
           <block type="math_number"><field name="NUM">10</field></block>
           <block type="math_arithmetic"></block>
           <block type="math_single"></block>
         </category>
+
+        <!-- 6. Logika -->
         <category name="Logika" colour="#5C81A6">
           <block type="controls_if"></block>
           <block type="logic_compare"></block>
           <block type="logic_operation"></block>
           <block type="logic_boolean"></block>
         </category>
+
+        <!-- 7. Iterasi -->
         <category name="Iterasi" colour="#5CA65C">
           <block type="controls_repeat_ext">
             <value name="TIMES"><block type="math_number"><field name="NUM">10</field></block></value>
@@ -203,7 +234,11 @@
             <value name="BY"><block type="math_number"><field name="NUM">1</field></block></value>
           </block>
         </category>
+
+        <!-- 8. Variabel -->
         <category name="Variabel" colour="#A55B80" custom="VARIABLE"></category>
+
+        <!-- 9. Teks -->
         <category name="Teks" colour="#5BA58C">
           <block type="text"></block>
           <block type="text_join"></block>
@@ -244,7 +279,7 @@
     dirLight.position.set(20, 40, 20);
     scene.add(dirLight);
 
-    // Grid Floor
+    // Grid Floor (Bidang XZ)
     const gridHelper = new THREE.GridHelper(100, 50, 0x444455, 0x333344);
     scene.add(gridHelper);
 
