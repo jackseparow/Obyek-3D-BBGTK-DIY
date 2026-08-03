@@ -3,20 +3,32 @@
  * GeoBlock BBGTK DIY
  */
 
+// 1. Definisikan blok pemilih warna visual (colour_picker) jika belum ada di lingkungan Blockly
+if (!Blockly.Blocks['colour_picker']) {
+  Blockly.Blocks['colour_picker'] = {
+    init: function() {
+      // Menggunakan FieldTextInput khusus yang diformat sebagai nilai warna
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldTextInput('#ff0000'), 'COLOUR');
+      this.setOutput(true, 'Colour');
+      this.setColour('#FF9800');
+    }
+  };
+  javascript.javascriptGenerator.forBlock['colour_picker'] = function(block) {
+    var colour = block.getFieldValue('COLOUR') || '#ff0000';
+    return [`'${colour}'`, javascript.javascriptGenerator.ORDER_ATOMIC];
+  };
+}
+
+// 2. Blok Utama Ubah Warna
 Blockly.Blocks['transform_color_palette'] = {
   init: function() {
-    // Menggunakan FieldTextInput yang diformat sebagai Pemilih Warna Visual
-    // Jika Blockly.FieldColour ada, gunakan. Jika tidak, gunakan FieldTextInput warna yang sangat stabil.
-    var colorField;
-    if (typeof Blockly.FieldColour === 'function') {
-      colorField = new Blockly.FieldColour('#ff0000');
-    } else {
-      colorField = new Blockly.FieldTextInput('#ff0000');
-    }
-
     this.appendDummyInput()
-        .appendField("ubah warna")
-        .appendField(colorField, "COLOR");
+        .appendField("ubah warna");
+
+    // Menggunakan Value Input untuk menerima blok palet warna visual
+    this.appendValueInput("COLOR")
+        .setCheck("Colour");
 
     this.appendValueInput("OPACITY")
         .setCheck("Number")
@@ -29,13 +41,13 @@ Blockly.Blocks['transform_color_palette'] = {
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour("#FF9800");
-    this.setTooltip("Pilih warna dan tingkat transparansinya (0-100%)");
+    this.setTooltip("Pilih warna menggunakan palet warna dan tentukan transparansinya (0-100%)");
   }
 };
 
 // Generator Kode JavaScript untuk Three.js
 javascript.javascriptGenerator.forBlock['transform_color_palette'] = function(block, generator) {
-  var color = block.getFieldValue('COLOR') || '#ff0000';
+  var color = generator.valueToCode(block, 'COLOR', generator.ORDER_ATOMIC) || "'#ff0000'";
   var opacity = generator.valueToCode(block, 'OPACITY', generator.ORDER_ATOMIC) || '0';
   var statement = generator.statementToCode(block, 'OBJECTS');
 
@@ -52,7 +64,7 @@ javascript.javascriptGenerator.forBlock['transform_color_palette'] = function(bl
   subGroup.traverse(child => {
     if (child.isMesh) {
       child.material = child.material.clone();
-      child.material.color.setStyle("${color}");
+      child.material.color.setStyle(${color});
       if (alpha < 1) {
         child.material.transparent = true;
         child.material.opacity = alpha;
