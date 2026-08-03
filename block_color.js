@@ -3,12 +3,12 @@
  * GeoBlock BBGTK DIY
  */
 
-// Mendaftarkan Blok Ubah Warna dengan FieldColour Native
 Blockly.Blocks['transform_color_palette'] = {
   init: function() {
+    // KUNCI PERBAIKAN: appendField digabung langsung ke appendDummyInput()
     this.appendDummyInput()
         .appendField("ubah warna")
-        .appendField(new Blockly.FieldColour("#ff0000"), "COLOR"); // Palet warna kotak bawaan
+        .appendField(new Blockly.FieldColour("#ff0000"), "COLOR");
 
     this.appendValueInput("OPACITY")
         .setCheck("Number")
