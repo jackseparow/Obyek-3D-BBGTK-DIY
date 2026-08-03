@@ -3,12 +3,16 @@
  * GeoBlock BBGTK DIY
  */
 
-// Inisialisasi Blok Ubah Warna dengan FieldColour Native
 Blockly.Blocks['transform_color_palette'] = {
   init: function() {
+    // Memeriksa keberadaan FieldColour dari plugin atau core
+    const colorField = (Blockly.FieldColour) 
+      ? new Blockly.FieldColour("#ff0000")
+      : new Blockly.FieldTextInput("#ff0000");
+
     this.appendDummyInput()
         .appendField("ubah warna")
-        .appendField(new Blockly.FieldColour("#ff0000"), "COLOR"); // Palet Warna Visual Native
+        .appendField(colorField, "COLOR");
 
     this.appendValueInput("OPACITY")
         .setCheck("Number")
@@ -21,7 +25,7 @@ Blockly.Blocks['transform_color_palette'] = {
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour("#FF9800");
-    this.setTooltip("Mengubah warna objek menggunakan palet warna visual dan menentukan transparansinya (0-100%)");
+    this.setTooltip("Klik kotak warna untuk memilih palet warna dan tentukan tingkat transparansinya (0-100%)");
   }
 };
 
