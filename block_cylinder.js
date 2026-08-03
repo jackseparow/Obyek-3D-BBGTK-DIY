@@ -11,7 +11,7 @@ Blockly.Blocks['shape_cylinder'] = {
     this.appendDummyInput()
         .appendField("titik acuan")
         .appendField(new Blockly.FieldDropdown([
-          ["pusat massa", "CENTER"],
+          ["titik pusat", "CENTER"],
           ["tepi", "CORNER"]
         ]), "ALIGN");
     this.appendValueInput("POS_X").setCheck("Number").appendField("x");
