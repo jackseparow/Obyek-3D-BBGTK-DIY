@@ -1,4 +1,25 @@
-Blockly.Blocks['transform_color'] = {
+/**
+ * Custom Block: UBAH WARNA (PALET WARNA & TRANSPARANSI)
+ * GeoBlock BBGTK DIY
+ */
+
+// Fix/Registrasi blok pemilih palet warna jika belum ada di core Blockly
+if (!Blockly.Blocks['colour_picker']) {
+  Blockly.Blocks['colour_picker'] = {
+    init: function() {
+      this.appendDummyInput().appendField(new Blockly.FieldTextInput('#ff0000'), 'COLOUR');
+      this.setOutput(true, 'Colour');
+      this.setColour('#FF9800');
+    }
+  };
+  javascript.javascriptGenerator.forBlock['colour_picker'] = function(block) {
+    var colour = block.getFieldValue('COLOUR') || '#ff0000';
+    return [`'${colour}'`, javascript.javascriptGenerator.ORDER_ATOMIC];
+  };
+}
+
+// Blok Utama Ubah Warna dengan Palet & Transparansi
+Blockly.Blocks['transform_color_palette'] = {
   init: function() {
     this.appendDummyInput().appendField("ubah warna");
     this.appendValueInput("COLOR").setCheck("Colour");
@@ -8,10 +29,11 @@ Blockly.Blocks['transform_color'] = {
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour("#FF9800");
+    this.setTooltip("Mengubah warna objek menggunakan palet warna dan menentukan persentase transparansi (0-100%)");
   }
 };
 
-javascript.javascriptGenerator.forBlock['transform_color'] = function(block, generator) {
+javascript.javascriptGenerator.forBlock['transform_color_palette'] = function(block, generator) {
   var color = generator.valueToCode(block, 'COLOR', generator.ORDER_ATOMIC) || "'#ff0000'";
   var opacity = generator.valueToCode(block, 'OPACITY', generator.ORDER_ATOMIC) || '0';
   var statement = generator.statementToCode(block, 'OBJECTS');
