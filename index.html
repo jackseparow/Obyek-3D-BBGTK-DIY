@@ -11,6 +11,9 @@
   <script src="https://unpkg.com/blockly/javascript_compressed.js"></script>
   <script src="https://unpkg.com/blockly/msg/id.js"></script>
 
+  <!-- Plugin Field Colour untuk Pop-up Palet Warna Visual -->
+  <script src="https://unpkg.com/@blockly/field-colour"></script>
+
   <!-- Three.js CDN (3D Engine Viewport) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
@@ -127,7 +130,7 @@
 
         <!-- 3. Transformasi -->
         <category name="Transformasi" colour="#FF9800">
-          <!-- Ubah Warna (Palet Warna & Transparansi) -->
+          <!-- Ubah Warna (Palet Warna Kotak & Transparansi) -->
           <block type="transform_color_palette">
             <value name="OPACITY">
               <shadow type="math_number"><field name="NUM">0</field></shadow>
