@@ -57,14 +57,13 @@
   <script src="block_circle.js"></script>
   <script src="block_square.js"></script>
 
-  <!-- INLINE BLOK TRANSFORMASI & UTILITIES -->
+  <!-- DEFINISI BLOK WARNA (PALET WARNA & TRANSPARANSI) SERTA TRANSFORMASI -->
   <script>
-    // FIX UNTUK COLOUR_PICKER DI BLOCKLY BARU
+    // FIX UNTUK COLOUR_PICKER IN-LINE (Pilihan Palet Warna)
     if (!Blockly.Blocks['colour_picker']) {
       Blockly.Blocks['colour_picker'] = {
         init: function() {
-          this.appendDummyInput()
-              .appendField(new Blockly.FieldTextInput('#ff0000'), 'COLOUR');
+          this.appendDummyInput().appendField(new Blockly.FieldTextInput('#ff0000'), 'COLOUR');
           this.setOutput(true, 'Colour');
           this.setColour('#FF9800');
         }
@@ -75,8 +74,8 @@
       };
     }
 
-    // 1. Ubah Warna
-    Blockly.Blocks['transform_color'] = {
+    // 1. Ubah Warna (Palet Warna & Transparansi)
+    Blockly.Blocks['transform_color_palette'] = {
       init: function() {
         this.appendDummyInput().appendField("ubah warna");
         this.appendValueInput("COLOR").setCheck("Colour");
@@ -88,7 +87,7 @@
         this.setColour("#FF9800");
       }
     };
-    javascript.javascriptGenerator.forBlock['transform_color'] = function(block, generator) {
+    javascript.javascriptGenerator.forBlock['transform_color_palette'] = function(block, generator) {
       var color = generator.valueToCode(block, 'COLOR', generator.ORDER_ATOMIC) || "'#ff0000'";
       var opacity = generator.valueToCode(block, 'OPACITY', generator.ORDER_ATOMIC) || '0';
       var statement = generator.statementToCode(block, 'OBJECTS');
@@ -293,32 +292,39 @@
 
         <!-- 3. Transformasi -->
         <category name="Transformasi" colour="#FF9800">
-          <block type="transform_color">
+          <!-- Blok Warna Tunggal (Palet Warna & Transparansi) -->
+          <block type="transform_color_palette">
             <value name="COLOR"><shadow type="colour_picker"><field name="COLOUR">#ff0000</field></shadow></value>
             <value name="OPACITY"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
           </block>
+
           <block type="transform_translate">
             <value name="X"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
             <value name="Y"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
             <value name="Z"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
           </block>
+
           <block type="transform_rotate">
             <value name="X"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
             <value name="Y"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
             <value name="Z"><shadow type="math_number"><field name="NUM">45</field></shadow></value>
           </block>
+
           <block type="transform_rotate_around_point">
             <value name="ANGLE"><shadow type="math_number"><field name="NUM">45</field></shadow></value>
             <value name="POS_X"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
             <value name="POS_Y"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
             <value name="POS_Z"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
           </block>
+
           <block type="transform_scale">
             <value name="X"><shadow type="math_number"><field name="NUM">2</field></shadow></value>
             <value name="Y"><shadow type="math_number"><field name="NUM">2</field></shadow></value>
             <value name="Z"><shadow type="math_number"><field name="NUM">2</field></shadow></value>
           </block>
+
           <block type="transform_mirror_plane"></block>
+
           <block type="transform_mirror_line">
             <value name="X1"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
             <value name="Y1"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
