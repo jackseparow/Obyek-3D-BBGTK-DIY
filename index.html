@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BlocksCAD Clone - 3D Block Coding</title>
   
-  <!-- Blockly CDN -->
+  <!-- Blockly CDN Core & Generators -->
   <script src="https://unpkg.com/blockly/blockly_compressed.js"></script>
   <script src="https://unpkg.com/blockly/blocks_compressed.js"></script>
   <script src="https://unpkg.com/blockly/javascript_compressed.js"></script>
@@ -102,24 +102,23 @@
   </header>
 
   <main id="main-container">
-    <!-- Workspace Blockly -->
     <div id="blockly-div"></div>
-
-    <!-- Viewport 3D Canvas -->
     <div id="viewport-container">
       <canvas id="canvas3d"></canvas>
       <pre id="code-preview">// Kode JavaScript tergenerasi akan muncul di sini...</pre>
     </div>
   </main>
 
-  <!-- Load Modul Custom Blocks 3D (Bahasa Indonesia) -->
+  <!-- Load Modul Custom Blocks 3D -->
   <script src="block_cube.js"></script>
   <script src="block_sphere.js"></script>
   <script src="block_cylinder.js"></script>
 
-  <!-- App Main & 3D Renderer Logic -->
   <script>
-    // 1. Inisialisasi Toolbox
+    // Inisialisasi Generator JS Compatibility
+    const jsGen = javascript.javascriptGenerator || javascriptGenerator;
+
+    // 1. Inisialisasi Toolbox XML
     const toolboxXml = `
       <xml id="toolbox" style="display: none">
         <category name="Bentuk 3D" colour="#4C97FF">
@@ -136,7 +135,7 @@
       </xml>
     `;
 
-    // 2. Inject Workspace Blockly
+    // 2. Inject Workspace
     const workspace = Blockly.inject('blockly-div', {
       toolbox: toolboxXml,
       scrollbars: true,
@@ -185,11 +184,10 @@
     const gridHelper = new THREE.GridHelper(100, 50, 0x00ffcc, 0x444455);
     scene.add(gridHelper);
 
-    // Group Penampung Objek Hasil Generate
+    // Group Penampung Objek Render
     const renderGroup = new THREE.Group();
     scene.add(renderGroup);
 
-    // Animation Loop
     function animate() {
       requestAnimationFrame(animate);
       controls.update();
@@ -197,7 +195,6 @@
     }
     animate();
 
-    // Auto Resize Viewport
     window.addEventListener('resize', () => {
       const width = container.clientWidth;
       const height = container.clientHeight;
@@ -206,20 +203,17 @@
       renderer.setSize(width, height);
     });
 
-    // 4. Eksekusi & Render Kode
+    // 4. Render Scene
     function renderScene() {
-      // Clear scene lama
       while(renderGroup.children.length > 0){ 
         const obj = renderGroup.children[0];
         if (obj.geometry) obj.geometry.dispose();
         renderGroup.remove(obj); 
       }
 
-      // Hasilkan Kode dari Blockly Workspace
-      const code = javascriptGenerator.workspaceToCode(workspace);
+      const code = jsGen.workspaceToCode(workspace);
       document.getElementById('code-preview').innerText = code || "// Workspace kosong";
 
-      // Jalankan Kode untuk menambahkan Mesh ke renderGroup
       try {
         const runCode = new Function('sceneGroup', 'THREE', code);
         runCode(renderGroup, THREE);
