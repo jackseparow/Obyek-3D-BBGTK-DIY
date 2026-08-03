@@ -3,16 +3,24 @@
  * GeoBlock BBGTK DIY
  */
 
+// Pastikan FieldColour terdaftar di Blockly registry
+if (window.fieldColour && window.fieldColour.FieldColour) {
+  Blockly.fieldRegistry.register('field_colour', window.fieldColour.FieldColour);
+}
+
 Blockly.Blocks['transform_color_palette'] = {
   init: function() {
-    // Memeriksa keberadaan FieldColour dari plugin atau core
-    const colorField = (Blockly.FieldColour) 
-      ? new Blockly.FieldColour("#ff0000")
-      : new Blockly.FieldTextInput("#ff0000");
-
     this.appendDummyInput()
-        .appendField("ubah warna")
-        .appendField(colorField, "COLOR");
+        .appendField("ubah warna");
+
+    // Menggunakan FieldColour dari plugin @blockly/field-colour atau bawaan
+    if (window.fieldColour && window.fieldColour.FieldColour) {
+      this.appendField(new window.fieldColour.FieldColour("#ff0000"), "COLOR");
+    } else if (Blockly.FieldColour) {
+      this.appendField(new Blockly.FieldColour("#ff0000"), "COLOR");
+    } else {
+      this.appendField(new Blockly.FieldTextInput("#ff0000"), "COLOR");
+    }
 
     this.appendValueInput("OPACITY")
         .setCheck("Number")
