@@ -1,34 +1,20 @@
 /**
- * Custom Block: UBAH WARNA (PALET WARNA & TRANSPARANSI)
+ * Custom Block: UBAH WARNA (MODE FORMAT HEX / RGB & TRANSPARANSI)
  * GeoBlock BBGTK DIY
  */
 
-// 1. Definisikan blok pemilih warna visual (colour_picker) jika belum ada di lingkungan Blockly
-if (!Blockly.Blocks['colour_picker']) {
-  Blockly.Blocks['colour_picker'] = {
-    init: function() {
-      // Menggunakan FieldTextInput khusus yang diformat sebagai nilai warna
-      this.appendDummyInput()
-          .appendField(new Blockly.FieldTextInput('#ff0000'), 'COLOUR');
-      this.setOutput(true, 'Colour');
-      this.setColour('#FF9800');
-    }
-  };
-  javascript.javascriptGenerator.forBlock['colour_picker'] = function(block) {
-    var colour = block.getFieldValue('COLOUR') || '#ff0000';
-    return [`'${colour}'`, javascript.javascriptGenerator.ORDER_ATOMIC];
-  };
-}
-
-// 2. Blok Utama Ubah Warna
 Blockly.Blocks['transform_color_palette'] = {
   init: function() {
     this.appendDummyInput()
-        .appendField("ubah warna");
+        .appendField("ubah warna format")
+        .appendField(new Blockly.FieldDropdown([
+          ["Hex (Palet)", "HEX"],
+          ["RGB (Red, Green, Blue)", "RGB"]
+        ], this.updateShape_.bind(this)), "FORMAT");
 
-    // Menggunakan Value Input untuk menerima blok palet warna visual
-    this.appendValueInput("COLOR")
-        .setCheck("Colour");
+    // Input default (HEX)
+    this.appendDummyInput("HEX_INPUT")
+        .appendField(this.createColorPicker('#ff0000'), "COLOR_HEX");
 
     this.appendValueInput("OPACITY")
         .setCheck("Number")
@@ -41,15 +27,75 @@ Blockly.Blocks['transform_color_palette'] = {
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour("#FF9800");
-    this.setTooltip("Pilih warna menggunakan palet warna dan tentukan transparansinya (0-100%)");
+    this.setTooltip("Pilih format warna (Hex Palet atau RGB) dan tentukan transparansinya (0-100%)");
+  },
+
+  // Fungsi khusus untuk memicu Color Picker HTML5 bawaan browser
+  createColorPicker: function(defaultColor) {
+    var field = new Blockly.FieldTextInput(defaultColor || '#ff0000');
+    field.showEditor_ = function() {
+      var self = this;
+      var input = document.createElement('input');
+      input.type = 'color';
+      input.value = self.getValue();
+      input.addEventListener('input', function() {
+        self.setValue(input.value);
+      });
+      input.click();
+    };
+    return field;
+  },
+
+  // Mengubah bentuk blok berdasarkan pilihan dropdown (HEX / RGB)
+  updateShape_: function(newMode) {
+    if (this.getFieldValue('FORMAT') === newMode) return;
+
+    this.workspace.recordUndo();
+
+    if (this.getInput("HEX_INPUT")) this.removeInput("HEX_INPUT");
+    if (this.getInput("RGB_INPUT")) this.removeInput("RGB_INPUT");
+
+    this.removeInput("OPACITY");
+    this.removeInput("OBJECTS");
+
+    if (newMode === "HEX") {
+      this.appendDummyInput("HEX_INPUT")
+          .appendField(this.createColorPicker('#ff0000'), "COLOR_HEX");
+    } else if (newMode === "RGB") {
+      this.appendDummyInput("RGB_INPUT")
+          .appendField("R:")
+          .appendField(new Blockly.FieldNumber(255, 0, 255), "R")
+          .appendField("G:")
+          .appendField(new Blockly.FieldNumber(0, 0, 255), "G")
+          .appendField("B:")
+          .appendField(new Blockly.FieldNumber(0, 0, 255), "B");
+    }
+
+    this.appendValueInput("OPACITY")
+        .setCheck("Number")
+        .appendField("transparansi (%)");
+
+    this.appendStatementInput("OBJECTS")
+        .appendField("objek");
   }
 };
 
 // Generator Kode JavaScript untuk Three.js
 javascript.javascriptGenerator.forBlock['transform_color_palette'] = function(block, generator) {
-  var color = generator.valueToCode(block, 'COLOR', generator.ORDER_ATOMIC) || "'#ff0000'";
+  var format = block.getFieldValue('FORMAT');
   var opacity = generator.valueToCode(block, 'OPACITY', generator.ORDER_ATOMIC) || '0';
   var statement = generator.statementToCode(block, 'OBJECTS');
+  var colorString = "'#ff0000'";
+
+  if (format === "HEX") {
+    var hexVal = block.getFieldValue('COLOR_HEX') || '#ff0000';
+    colorString = `"${hexVal}"`;
+  } else if (format === "RGB") {
+    var r = block.getFieldValue('R') || 0;
+    var g = block.getFieldValue('G') || 0;
+    var b = block.getFieldValue('B') || 0;
+    colorString = `"rgb(${r}, ${g}, ${b})"`;
+  }
 
   return `
 (function() {
@@ -64,7 +110,7 @@ javascript.javascriptGenerator.forBlock['transform_color_palette'] = function(bl
   subGroup.traverse(child => {
     if (child.isMesh) {
       child.material = child.material.clone();
-      child.material.color.setStyle(${color});
+      child.material.color.setStyle(${colorString});
       if (alpha < 1) {
         child.material.transparent = true;
         child.material.opacity = alpha;
