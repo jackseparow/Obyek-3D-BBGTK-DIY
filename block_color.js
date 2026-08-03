@@ -1,6 +1,3 @@
-/**
- * Custom Block: UBAH WARNA & TRANSPARANSI (GeoBlock BBGTK DIY)
- */
 Blockly.Blocks['transform_color'] = {
   init: function() {
     this.appendDummyInput().appendField("ubah warna");
@@ -11,17 +8,13 @@ Blockly.Blocks['transform_color'] = {
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour("#FF9800");
-    this.setTooltip("Mengubah warna dan transparansi objek di dalamnya");
   }
 };
 
-const genColor = javascript.javascriptGenerator || javascriptGenerator;
-
-genColor.forBlock['transform_color'] = function(block, generator) {
-  const g = generator || genColor;
-  var color = g.valueToCode(block, 'COLOR', g.ORDER_ATOMIC) || "'#ff0000'";
-  var opacity = g.valueToCode(block, 'OPACITY', g.ORDER_ATOMIC) || '0';
-  var statement = g.statementToCode(block, 'OBJECTS');
+javascript.javascriptGenerator.forBlock['transform_color'] = function(block, generator) {
+  var color = generator.valueToCode(block, 'COLOR', generator.ORDER_ATOMIC) || "'#ff0000'";
+  var opacity = generator.valueToCode(block, 'OPACITY', generator.ORDER_ATOMIC) || '0';
+  var statement = generator.statementToCode(block, 'OBJECTS');
 
   return `
 (function() {
