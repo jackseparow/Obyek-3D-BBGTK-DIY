@@ -11,9 +11,6 @@
   <script src="https://unpkg.com/blockly/javascript_compressed.js"></script>
   <script src="https://unpkg.com/blockly/msg/id.js"></script>
 
-  <!-- Plugin Field Colour CDN (Palet Warna Visual Matrix) -->
-  <script src="https://unpkg.com/@blockly/field-colour"></script>
-
   <!-- Three.js CDN (3D Engine Viewport) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
@@ -45,10 +42,7 @@
   </header>
 
   <main id="main-container">
-    <!-- Area Workspace Blockly -->
     <div id="blockly-div"></div>
-
-    <!-- Viewport 3D Canvas -->
     <div id="viewport-container">
       <canvas id="canvas3d"></canvas>
       <pre id="code-preview">// Kode JavaScript tergenerasi akan muncul di sini...</pre>
@@ -73,16 +67,8 @@
   <script src="block_mirror.js"></script>
 
   <script>
-    // ------------------------------------------------------------------
-    // PENDAFTARAN EKSPLISIT FIELD_COLOUR SEBELUM WORKSPACE DI-INJECT
-    // ------------------------------------------------------------------
-    if (window.fieldColour && window.fieldColour.FieldColour) {
-      Blockly.fieldRegistry.register('field_colour', window.fieldColour.FieldColour);
-    }
-
     const jsGen = javascript.javascriptGenerator || javascriptGenerator;
 
-    // 1. Inisialisasi Toolbox XML
     const toolboxXml = `
       <xml id="toolbox" style="display: none">
         <!-- 1. Bentuk 3D -->
@@ -222,7 +208,6 @@
       </xml>
     `;
 
-    // 2. Inject Workspace
     const workspace = Blockly.inject('blockly-div', {
       toolbox: toolboxXml,
       scrollbars: true,
@@ -230,7 +215,6 @@
       grid: { spacing: 20, length: 3, colour: '#ccc', snap: true }
     });
 
-    // 3. Setup Three.js Engine
     const canvas = document.getElementById('canvas3d');
     const container = document.getElementById('viewport-container');
     
@@ -281,7 +265,6 @@
       renderer.setSize(width, height);
     });
 
-    // 4. Fungsi Render Scene
     function renderScene() {
       while(renderGroup.children.length > 0){ 
         const obj = renderGroup.children[0];
