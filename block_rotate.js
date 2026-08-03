@@ -1,8 +1,3 @@
-/**
- * Custom Block: ROTASI (GeoBlock BBGTK DIY)
- */
-
-// 1. Rotasi Sumbu X, Y, Z
 Blockly.Blocks['transform_rotate'] = {
   init: function() {
     this.appendDummyInput().appendField("rotasikan");
@@ -14,22 +9,16 @@ Blockly.Blocks['transform_rotate'] = {
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour("#FF9800");
-    this.setTooltip("Memutar objek berdasarkan sudut derajat sumbu X, Y, Z");
   }
 };
 
-// 2. Rotasi Mengitari Titik Koordinat Tertentu (Fancy Rotate)
 Blockly.Blocks['transform_rotate_around_point'] = {
   init: function() {
     this.appendDummyInput().appendField("rotasikan sebesar");
     this.appendValueInput("ANGLE").setCheck("Number").appendField("(°)");
     this.appendDummyInput()
         .appendField("pada sumbu")
-        .appendField(new Blockly.FieldDropdown([
-          ["X", "X"],
-          ["Y", "Y"],
-          ["Z", "Z"]
-        ]), "AXIS")
+        .appendField(new Blockly.FieldDropdown([["X", "X"], ["Y", "Y"], ["Z", "Z"]]), "AXIS")
         .appendField("mengitari titik");
     this.appendValueInput("POS_X").setCheck("Number").appendField("x");
     this.appendValueInput("POS_Y").setCheck("Number").appendField("y");
@@ -39,18 +28,14 @@ Blockly.Blocks['transform_rotate_around_point'] = {
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour("#FF9800");
-    this.setTooltip("Memutar objek mengitari titik pusat koordinat tertentu");
   }
 };
 
-const genRotate = javascript.javascriptGenerator || javascriptGenerator;
-
-genRotate.forBlock['transform_rotate'] = function(block, generator) {
-  const g = generator || genRotate;
-  var rx = g.valueToCode(block, 'X', g.ORDER_ATOMIC) || '0';
-  var ry = g.valueToCode(block, 'Y', g.ORDER_ATOMIC) || '0';
-  var rz = g.valueToCode(block, 'Z', g.ORDER_ATOMIC) || '0';
-  var statement = g.statementToCode(block, 'OBJECTS');
+javascript.javascriptGenerator.forBlock['transform_rotate'] = function(block, generator) {
+  var rx = generator.valueToCode(block, 'X', generator.ORDER_ATOMIC) || '0';
+  var ry = generator.valueToCode(block, 'Y', generator.ORDER_ATOMIC) || '0';
+  var rz = generator.valueToCode(block, 'Z', generator.ORDER_ATOMIC) || '0';
+  var statement = generator.statementToCode(block, 'OBJECTS');
 
   return `
 (function() {
@@ -70,14 +55,13 @@ genRotate.forBlock['transform_rotate'] = function(block, generator) {
 `;
 };
 
-genRotate.forBlock['transform_rotate_around_point'] = function(block, generator) {
-  const g = generator || genRotate;
-  var angle = g.valueToCode(block, 'ANGLE', g.ORDER_ATOMIC) || '45';
+javascript.javascriptGenerator.forBlock['transform_rotate_around_point'] = function(block, generator) {
+  var angle = generator.valueToCode(block, 'ANGLE', generator.ORDER_ATOMIC) || '45';
   var axis = block.getFieldValue('AXIS');
-  var px = g.valueToCode(block, 'POS_X', g.ORDER_ATOMIC) || '0';
-  var py = g.valueToCode(block, 'POS_Y', g.ORDER_ATOMIC) || '0';
-  var pz = g.valueToCode(block, 'POS_Z', g.ORDER_ATOMIC) || '0';
-  var statement = g.statementToCode(block, 'OBJECTS');
+  var px = generator.valueToCode(block, 'POS_X', generator.ORDER_ATOMIC) || '0';
+  var py = generator.valueToCode(block, 'POS_Y', generator.ORDER_ATOMIC) || '0';
+  var pz = generator.valueToCode(block, 'POS_Z', generator.ORDER_ATOMIC) || '0';
+  var statement = generator.statementToCode(block, 'OBJECTS');
 
   return `
 (function() {
@@ -90,7 +74,6 @@ genRotate.forBlock['transform_rotate_around_point'] = function(block, generator)
   const point = new THREE.Vector3(Number(${px}), Number(${py}), Number(${pz}));
   const rad = (Number(${angle}) * Math.PI) / 180;
   
-  // Geser ke titik pivot -> Rotasi -> Geser kembali
   subGroup.position.sub(point);
   if ("${axis}" === "X") subGroup.position.applyAxisAngle(new THREE.Vector3(1, 0, 0), rad);
   if ("${axis}" === "Y") subGroup.position.applyAxisAngle(new THREE.Vector3(0, 1, 0), rad);
