@@ -50,21 +50,21 @@
   </main>
 
   <!-- Modul Custom Blocks 3D JS -->
-  <script src="block_cube.js?v=9.0"></script>
-  <script src="block_sphere.js?v=9.0"></script>
-  <script src="block_cylinder.js?v=9.0"></script>
-  <script src="block_torus.js?v=9.0"></script>
+  <script src="block_cube.js"></script>
+  <script src="block_sphere.js"></script>
+  <script src="block_cylinder.js"></script>
+  <script src="block_torus.js"></script>
 
   <!-- Modul Custom Blocks 2D JS -->
-  <script src="block_circle.js?v=9.0"></script>
-  <script src="block_square.js?v=9.0"></script>
+  <script src="block_circle.js"></script>
+  <script src="block_square.js"></script>
 
   <!-- Modul Custom Blocks Transformasi JS -->
-  <script src="block_color.js?v=9.0"></script>
-  <script src="block_translate.js?v=9.0"></script>
-  <script src="block_rotate.js?v=9.0"></script>
-  <script src="block_scale.js?v=9.0"></script>
-  <script src="block_mirror.js?v=9.0"></script>
+  <script src="block_color.js"></script>
+  <script src="block_translate.js"></script>
+  <script src="block_rotate.js"></script>
+  <script src="block_scale.js"></script>
+  <script src="block_mirror.js"></script>
 
   <script>
     const jsGen = javascript.javascriptGenerator || javascriptGenerator;
@@ -125,26 +125,30 @@
           </block>
         </category>
 
-        <!-- 3. Transformasi -->
+        <!-- 3. Transformasi (SELURUH 7 BLOK LENGKAP) -->
         <category name="Transformasi" colour="#FF9800">
+          <!-- 1. Blok Ubah Warna -->
           <block type="transform_color_palette">
             <value name="OPACITY">
               <shadow type="math_number"><field name="NUM">0</field></shadow>
             </value>
           </block>
 
+          <!-- 2. Translasi -->
           <block type="transform_translate">
             <value name="X"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
             <value name="Y"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
             <value name="Z"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
           </block>
 
+          <!-- 3. Rotasi Sumbu Utama -->
           <block type="transform_rotate">
             <value name="X"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
             <value name="Y"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
             <value name="Z"><shadow type="math_number"><field name="NUM">45</field></shadow></value>
           </block>
 
+          <!-- 4. Rotasi Mengitari Titik -->
           <block type="transform_rotate_around_point">
             <value name="ANGLE"><shadow type="math_number"><field name="NUM">45</field></shadow></value>
             <value name="POS_X"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
@@ -152,14 +156,17 @@
             <value name="POS_Z"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
           </block>
 
+          <!-- 5. Dilatasi (Skala) -->
           <block type="transform_scale">
             <value name="X"><shadow type="math_number"><field name="NUM">2</field></shadow></value>
             <value name="Y"><shadow type="math_number"><field name="NUM">2</field></shadow></value>
             <value name="Z"><shadow type="math_number"><field name="NUM">2</field></shadow></value>
           </block>
 
+          <!-- 6. Pencerminan Bidang -->
           <block type="transform_mirror_plane"></block>
 
+          <!-- 7. Pencerminan Garis -->
           <block type="transform_mirror_line">
             <value name="X1"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
             <value name="Y1"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
