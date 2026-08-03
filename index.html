@@ -16,93 +16,19 @@
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    body, html {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    #app-header {
-      height: 50px;
-      background-color: #1e1e2f;
-      color: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 20px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-      z-index: 10;
-    }
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .header-logo {
-      height: 32px;
-      width: auto;
-      object-fit: contain;
-    }
-    #app-header h1 {
-      font-size: 1.2rem;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-    }
-    #btn-render {
-      background-color: #28a745;
-      color: white;
-      border: none;
-      padding: 8px 18px;
-      font-size: 0.95rem;
-      font-weight: bold;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-    #btn-render:hover {
-      background-color: #218838;
-    }
-    #main-container {
-      display: flex;
-      width: 100vw;
-      height: calc(100vh - 50px);
-    }
-    #blockly-div {
-      width: 55%;
-      height: 100%;
-    }
-    #viewport-container {
-      width: 45%;
-      height: 100%;
-      position: relative;
-      background-color: #141419;
-    }
-    #canvas3d {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-    #code-preview {
-      position: absolute;
-      bottom: 10px;
-      left: 10px;
-      right: 10px;
-      height: 120px;
-      background: rgba(0, 0, 0, 0.75);
-      color: #00ff66;
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 12px;
-      padding: 10px;
-      border-radius: 6px;
-      overflow-y: auto;
-      pointer-events: none;
-      border: 1px solid rgba(255,255,255,0.1);
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body, html { width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    #app-header { height: 50px; background-color: #1e1e2f; color: #ffffff; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); z-index: 10; }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .header-logo { height: 32px; width: auto; object-fit: contain; }
+    #app-header h1 { font-size: 1.2rem; font-weight: 600; letter-spacing: 0.5px; }
+    #btn-render { background-color: #28a745; color: white; border: none; padding: 8px 18px; font-size: 0.95rem; font-weight: bold; border-radius: 4px; cursor: pointer; transition: background-color 0.2s; }
+    #btn-render:hover { background-color: #218838; }
+    #main-container { display: flex; width: 100vw; height: calc(100vh - 50px); }
+    #blockly-div { width: 55%; height: 100%; }
+    #viewport-container { width: 45%; height: 100%; position: relative; background-color: #141419; }
+    #canvas3d { width: 100%; height: 100%; display: block; }
+    #code-preview { position: absolute; bottom: 10px; left: 10px; right: 10px; height: 120px; background: rgba(0, 0, 0, 0.75); color: #00ff66; font-family: 'Courier New', Courier, monospace; font-size: 12px; padding: 10px; border-radius: 6px; overflow-y: auto; pointer-events: none; border: 1px solid rgba(255,255,255,0.1); }
   </style>
 </head>
 <body>
@@ -116,40 +42,183 @@
   </header>
 
   <main id="main-container">
-    <!-- Area Workspace Blockly -->
     <div id="blockly-div"></div>
-
-    <!-- Viewport 3D Canvas -->
     <div id="viewport-container">
       <canvas id="canvas3d"></canvas>
       <pre id="code-preview">// Kode JavaScript tergenerasi akan muncul di sini...</pre>
     </div>
   </main>
 
-  <!-- Modul Custom Blocks 3D JS -->
+  <!-- Modul Shapes JS (3D & 2D) -->
   <script src="block_cube.js"></script>
   <script src="block_sphere.js"></script>
   <script src="block_cylinder.js"></script>
   <script src="block_torus.js"></script>
-
-  <!-- Modul Custom Blocks 2D JS -->
   <script src="block_circle.js"></script>
   <script src="block_square.js"></script>
 
-  <!-- Modul Custom Blocks Transformasi JS -->
-  <script src="block_color.js"></script>
-  <script src="block_translate.js"></script>
-  <script src="block_rotate.js"></script>
-  <script src="block_scale.js"></script>
-  <script src="block_mirror.js"></script>
+  <!-- INLINE BLOK TRANSFORMASI UNTUK MEMASTIKAN LANGSUNG MUNCUL -->
+  <script>
+    // 1. Ubah Warna
+    Blockly.Blocks['transform_color'] = {
+      init: function() {
+        this.appendDummyInput().appendField("ubah warna");
+        this.appendValueInput("COLOR").setCheck("Colour");
+        this.appendValueInput("OPACITY").setCheck("Number").appendField("transparansi (%)");
+        this.appendStatementInput("OBJECTS").appendField("objek");
+        this.setInputsInline(true);
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour("#FF9800");
+      }
+    };
+    javascript.javascriptGenerator.forBlock['transform_color'] = function(block, generator) {
+      var color = generator.valueToCode(block, 'COLOR', generator.ORDER_ATOMIC) || "'#ff0000'";
+      var opacity = generator.valueToCode(block, 'OPACITY', generator.ORDER_ATOMIC) || '0';
+      var statement = generator.statementToCode(block, 'OBJECTS');
+      return `\n(function() {\n  const subGroup = new THREE.Group();\n  const parentGroup = sceneGroup;\n  sceneGroup = subGroup;\n  ${statement}\n  sceneGroup = parentGroup;\n  const alpha = 1 - (Math.min(Math.max(Number(${opacity}), 0), 100) / 100);\n  subGroup.traverse(child => {\n    if (child.isMesh) {\n      child.material = child.material.clone();\n      child.material.color.setStyle(${color});\n      if (alpha < 1) { child.material.transparent = true; child.material.opacity = alpha; }\n    }\n  });\n  sceneGroup.add(subGroup);\n})();\n`;
+    };
 
+    // 2. Translasi
+    Blockly.Blocks['transform_translate'] = {
+      init: function() {
+        this.appendDummyInput().appendField("translasikan");
+        this.appendValueInput("X").setCheck("Number").appendField("X");
+        this.appendValueInput("Y").setCheck("Number").appendField("Y");
+        this.appendValueInput("Z").setCheck("Number").appendField("Z");
+        this.appendStatementInput("OBJECTS").appendField("objek");
+        this.setInputsInline(true);
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour("#FF9800");
+      }
+    };
+    javascript.javascriptGenerator.forBlock['transform_translate'] = function(block, generator) {
+      var x = generator.valueToCode(block, 'X', generator.ORDER_ATOMIC) || '0';
+      var y = generator.valueToCode(block, 'Y', generator.ORDER_ATOMIC) || '0';
+      var z = generator.valueToCode(block, 'Z', generator.ORDER_ATOMIC) || '0';
+      var statement = generator.statementToCode(block, 'OBJECTS');
+      return `\n(function() {\n  const subGroup = new THREE.Group();\n  const parentGroup = sceneGroup;\n  sceneGroup = subGroup;\n  ${statement}\n  sceneGroup = parentGroup;\n  subGroup.position.set(Number(${x}), Number(${y}), Number(${z}));\n  sceneGroup.add(subGroup);\n})();\n`;
+    };
+
+    // 3. Rotasi
+    Blockly.Blocks['transform_rotate'] = {
+      init: function() {
+        this.appendDummyInput().appendField("rotasikan");
+        this.appendValueInput("X").setCheck("Number").appendField("X (°)");
+        this.appendValueInput("Y").setCheck("Number").appendField("Y (°)");
+        this.appendValueInput("Z").setCheck("Number").appendField("Z (°)");
+        this.appendStatementInput("OBJECTS").appendField("objek");
+        this.setInputsInline(true);
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour("#FF9800");
+      }
+    };
+    javascript.javascriptGenerator.forBlock['transform_rotate'] = function(block, generator) {
+      var rx = generator.valueToCode(block, 'X', generator.ORDER_ATOMIC) || '0';
+      var ry = generator.valueToCode(block, 'Y', generator.ORDER_ATOMIC) || '0';
+      var rz = generator.valueToCode(block, 'Z', generator.ORDER_ATOMIC) || '0';
+      var statement = generator.statementToCode(block, 'OBJECTS');
+      return `\n(function() {\n  const subGroup = new THREE.Group();\n  const parentGroup = sceneGroup;\n  sceneGroup = subGroup;\n  ${statement}\n  sceneGroup = parentGroup;\n  subGroup.rotation.set((Number(${rx})*Math.PI)/180, (Number(${ry})*Math.PI)/180, (Number(${rz})*Math.PI)/180);\n  sceneGroup.add(subGroup);\n})();\n`;
+    };
+
+    // 4. Rotasi Mengitari Titik
+    Blockly.Blocks['transform_rotate_around_point'] = {
+      init: function() {
+        this.appendDummyInput().appendField("rotasikan sebesar");
+        this.appendValueInput("ANGLE").setCheck("Number").appendField("(°)");
+        this.appendDummyInput().appendField("pada sumbu").appendField(new Blockly.FieldDropdown([["X", "X"], ["Y", "Y"], ["Z", "Z"]]), "AXIS").appendField("mengitari titik");
+        this.appendValueInput("POS_X").setCheck("Number").appendField("x");
+        this.appendValueInput("POS_Y").setCheck("Number").appendField("y");
+        this.appendValueInput("POS_Z").setCheck("Number").appendField("z");
+        this.appendStatementInput("OBJECTS").appendField("objek");
+        this.setInputsInline(true);
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour("#FF9800");
+      }
+    };
+    javascript.javascriptGenerator.forBlock['transform_rotate_around_point'] = function(block, generator) {
+      var angle = generator.valueToCode(block, 'ANGLE', generator.ORDER_ATOMIC) || '45';
+      var axis = block.getFieldValue('AXIS');
+      var px = generator.valueToCode(block, 'POS_X', generator.ORDER_ATOMIC) || '0';
+      var py = generator.valueToCode(block, 'POS_Y', generator.ORDER_ATOMIC) || '0';
+      var pz = generator.valueToCode(block, 'POS_Z', generator.ORDER_ATOMIC) || '0';
+      var statement = generator.statementToCode(block, 'OBJECTS');
+      return `\n(function() {\n  const subGroup = new THREE.Group();\n  const parentGroup = sceneGroup;\n  sceneGroup = subGroup;\n  ${statement}\n  sceneGroup = parentGroup;\n  const point = new THREE.Vector3(Number(${px}), Number(${py}), Number(${pz}));\n  const rad = (Number(${angle}) * Math.PI) / 180;\n  subGroup.position.sub(point);\n  if ("${axis}" === "X") subGroup.position.applyAxisAngle(new THREE.Vector3(1,0,0), rad);\n  if ("${axis}" === "Y") subGroup.position.applyAxisAngle(new THREE.Vector3(0,1,0), rad);\n  if ("${axis}" === "Z") subGroup.position.applyAxisAngle(new THREE.Vector3(0,0,1), rad);\n  subGroup.position.add(point);\n  if ("${axis}" === "X") subGroup.rotation.x += rad;\n  if ("${axis}" === "Y") subGroup.rotation.y += rad;\n  if ("${axis}" === "Z") subGroup.rotation.z += rad;\n  sceneGroup.add(subGroup);\n})();\n`;
+    };
+
+    // 5. Dilatasi (Skala)
+    Blockly.Blocks['transform_scale'] = {
+      init: function() {
+        this.appendDummyInput().appendField("dilatasikan (skala)");
+        this.appendValueInput("X").setCheck("Number").appendField("X");
+        this.appendValueInput("Y").setCheck("Number").appendField("Y");
+        this.appendValueInput("Z").setCheck("Number").appendField("Z");
+        this.appendStatementInput("OBJECTS").appendField("objek");
+        this.setInputsInline(true);
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour("#FF9800");
+      }
+    };
+    javascript.javascriptGenerator.forBlock['transform_scale'] = function(block, generator) {
+      var sx = generator.valueToCode(block, 'X', generator.ORDER_ATOMIC) || '1';
+      var sy = generator.valueToCode(block, 'Y', generator.ORDER_ATOMIC) || '1';
+      var sz = generator.valueToCode(block, 'Z', generator.ORDER_ATOMIC) || '1';
+      var statement = generator.statementToCode(block, 'OBJECTS');
+      return `\n(function() {\n  const subGroup = new THREE.Group();\n  const parentGroup = sceneGroup;\n  sceneGroup = subGroup;\n  ${statement}\n  sceneGroup = parentGroup;\n  subGroup.scale.set(Number(${sx}), Number(${sy}), Number(${sz}));\n  sceneGroup.add(subGroup);\n})();\n`;
+    };
+
+    // 6. Pencerminan Bidang
+    Blockly.Blocks['transform_mirror_plane'] = {
+      init: function() {
+        this.appendDummyInput().appendField("cerminkan terhadap bidang").appendField(new Blockly.FieldDropdown([["XY (Sumbu Z dibalik)", "XY"], ["XZ (Sumbu Y dibalik)", "XZ"], ["YZ (Sumbu X dibalik)", "YZ"]]), "PLANE");
+        this.appendStatementInput("OBJECTS").appendField("objek");
+        this.setInputsInline(true);
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour("#FF9800");
+      }
+    };
+    javascript.javascriptGenerator.forBlock['transform_mirror_plane'] = function(block, generator) {
+      var plane = block.getFieldValue('PLANE');
+      var statement = generator.statementToCode(block, 'OBJECTS');
+      return `\n(function() {\n  const subGroup = new THREE.Group();\n  const parentGroup = sceneGroup;\n  sceneGroup = subGroup;\n  ${statement}\n  sceneGroup = parentGroup;\n  if ("${plane}" === "XY") subGroup.scale.z *= -1;\n  if ("${plane}" === "XZ") subGroup.scale.y *= -1;\n  if ("${plane}" === "YZ") subGroup.scale.x *= -1;\n  sceneGroup.add(subGroup);\n})();\n`;
+    };
+
+    // 7. Pencerminan Titik & Rotasi
+    Blockly.Blocks['transform_mirror_point_rotate'] = {
+      init: function() {
+        this.appendDummyInput().appendField("cerminkan terhadap koordinat");
+        this.appendValueInput("POS_X").setCheck("Number").appendField("x");
+        this.appendValueInput("POS_Y").setCheck("Number").appendField("y");
+        this.appendValueInput("POS_Z").setCheck("Number").appendField("z");
+        this.appendValueInput("ANGLE").setCheck("Number").appendField("dan rotasikan (°)");
+        this.appendStatementInput("OBJECTS").appendField("objek");
+        this.setInputsInline(true);
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour("#FF9800");
+      }
+    };
+    javascript.javascriptGenerator.forBlock['transform_mirror_point_rotate'] = function(block, generator) {
+      var px = generator.valueToCode(block, 'POS_X', generator.ORDER_ATOMIC) || '0';
+      var py = generator.valueToCode(block, 'POS_Y', generator.ORDER_ATOMIC) || '0';
+      var pz = generator.valueToCode(block, 'POS_Z', generator.ORDER_ATOMIC) || '0';
+      var angle = generator.valueToCode(block, 'ANGLE', generator.ORDER_ATOMIC) || '0';
+      var statement = generator.statementToCode(block, 'OBJECTS');
+      return `\n(function() {\n  const subGroup = new THREE.Group();\n  const parentGroup = sceneGroup;\n  sceneGroup = subGroup;\n  ${statement}\n  sceneGroup = parentGroup;\n  const center = new THREE.Vector3(Number(${px}), Number(${py}), Number(${pz}));\n  const rad = (Number(${angle}) * Math.PI) / 180;\n  subGroup.position.sub(center);\n  subGroup.scale.set(-1, -1, -1);\n  subGroup.rotation.z += rad;\n  subGroup.position.add(center);\n  sceneGroup.add(subGroup);\n})();\n`;
+    };
+  </script>
+
+  <!-- App Main Logic -->
   <script>
     const jsGen = javascript.javascriptGenerator || javascriptGenerator;
 
-    // 1. Inisialisasi Toolbox
     const toolboxXml = `
       <xml id="toolbox" style="display: none">
-        <!-- 1. Bentuk 3D -->
         <category name="Bentuk 3D" colour="#4C97FF">
           <block type="shape_cube">
             <value name="SIZE_X"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
@@ -159,14 +228,12 @@
             <value name="POS_Y"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
             <value name="POS_Z"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
           </block>
-
           <block type="shape_sphere">
             <value name="RADIUS"><shadow type="math_number"><field name="NUM">5</field></shadow></value>
             <value name="POS_X"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
             <value name="POS_Y"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
             <value name="POS_Z"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
           </block>
-
           <block type="shape_cylinder">
             <value name="RADIUS_TOP"><shadow type="math_number"><field name="NUM">5</field></shadow></value>
             <value name="RADIUS_BOTTOM"><shadow type="math_number"><field name="NUM">5</field></shadow></value>
@@ -175,7 +242,6 @@
             <value name="POS_Y"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
             <value name="POS_Z"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
           </block>
-
           <block type="shape_torus">
             <value name="RADIUS"><shadow type="math_number"><field name="NUM">8</field></shadow></value>
             <value name="TUBE"><shadow type="math_number"><field name="NUM">3</field></shadow></value>
@@ -185,7 +251,6 @@
           </block>
         </category>
 
-        <!-- 2. Bentuk 2D -->
         <category name="Bentuk 2D" colour="#9C27B0">
           <block type="shape_circle">
             <value name="RADIUS"><shadow type="math_number"><field name="NUM">5</field></shadow></value>
@@ -193,7 +258,6 @@
             <value name="POS_Y"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
             <value name="POS_Z"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
           </block>
-
           <block type="shape_square">
             <value name="SIZE_X"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
             <value name="SIZE_Y"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
@@ -203,40 +267,33 @@
           </block>
         </category>
 
-        <!-- 3. Transformasi -->
         <category name="Transformasi" colour="#FF9800">
           <block type="transform_color">
             <value name="COLOR"><shadow type="colour_picker"><field name="COLOUR">#ff0000</field></shadow></value>
             <value name="OPACITY"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
           </block>
-
           <block type="transform_translate">
             <value name="X"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
             <value name="Y"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
             <value name="Z"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
           </block>
-
           <block type="transform_rotate">
             <value name="X"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
             <value name="Y"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
             <value name="Z"><shadow type="math_number"><field name="NUM">45</field></shadow></value>
           </block>
-
           <block type="transform_rotate_around_point">
             <value name="ANGLE"><shadow type="math_number"><field name="NUM">45</field></shadow></value>
             <value name="POS_X"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
             <value name="POS_Y"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
             <value name="POS_Z"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
           </block>
-
           <block type="transform_scale">
             <value name="X"><shadow type="math_number"><field name="NUM">2</field></shadow></value>
             <value name="Y"><shadow type="math_number"><field name="NUM">2</field></shadow></value>
             <value name="Z"><shadow type="math_number"><field name="NUM">2</field></shadow></value>
           </block>
-
           <block type="transform_mirror_plane"></block>
-
           <block type="transform_mirror_point_rotate">
             <value name="POS_X"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
             <value name="POS_Y"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
@@ -245,7 +302,6 @@
           </block>
         </category>
 
-        <!-- Kategori Pendukung Lainnya -->
         <category name="Operasi Himpunan" colour="#E91E63"></category>
         <category name="Operasi Aritmetika" colour="#5B80A5">
           <block type="math_number"><field name="NUM">10</field></block>
@@ -276,7 +332,6 @@
       </xml>
     `;
 
-    // 2. Inject Workspace
     const workspace = Blockly.inject('blockly-div', {
       toolbox: toolboxXml,
       scrollbars: true,
@@ -284,14 +339,12 @@
       grid: { spacing: 20, length: 3, colour: '#ccc', snap: true }
     });
 
-    // 3. Setup Three.js Engine
     const canvas = document.getElementById('canvas3d');
     const container = document.getElementById('viewport-container');
     
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x1e1e24);
 
-    // Kamera dengan orientasi Z-Up
     const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
     camera.up.set(0, 0, 1);
     camera.position.set(40, -50, 30);
@@ -304,7 +357,6 @@
     controls.target.set(0, 0, 0);
     controls.enableDamping = true;
 
-    // Lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
     scene.add(ambientLight);
 
@@ -312,16 +364,13 @@
     dirLight.position.set(30, -30, 50);
     scene.add(dirLight);
 
-    // Grid Floor di Bidang XY (Lantai Z = 0)
     const gridHelper = new THREE.GridHelper(100, 50, 0x00ffcc, 0x444455);
     gridHelper.rotation.x = Math.PI / 2;
     scene.add(gridHelper);
 
-    // Sumbu 3D Helper (Merah = X, Hijau = Y, Biru = Z)
     const axesHelper = new THREE.AxesHelper(30);
     scene.add(axesHelper);
 
-    // Group Penampung Objek Render
     const renderGroup = new THREE.Group();
     scene.add(renderGroup);
 
@@ -340,7 +389,6 @@
       renderer.setSize(width, height);
     });
 
-    // 4. Fungsi Render Scene
     function renderScene() {
       while(renderGroup.children.length > 0){ 
         const obj = renderGroup.children[0];
