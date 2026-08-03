@@ -1,8 +1,3 @@
-/**
- * Custom Block: PENCERMINAN (GeoBlock BBGTK DIY)
- */
-
-// 1. Pencerminan terhadap Bidang Utama (XY, XZ, YZ)
 Blockly.Blocks['transform_mirror_plane'] = {
   init: function() {
     this.appendDummyInput()
@@ -17,11 +12,9 @@ Blockly.Blocks['transform_mirror_plane'] = {
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour("#FF9800");
-    this.setTooltip("Mencerminkan objek terhadap bidang koordinat XY, XZ, atau YZ");
   }
 };
 
-// 2. Pencerminan Terhadap Koordinat (x,y,z) & Rotasi
 Blockly.Blocks['transform_mirror_point_rotate'] = {
   init: function() {
     this.appendDummyInput().appendField("cerminkan terhadap koordinat");
@@ -34,13 +27,10 @@ Blockly.Blocks['transform_mirror_point_rotate'] = {
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour("#FF9800");
-    this.setTooltip("Mencerminkan objek terhadap titik (x,y,z) lalu memutarnya");
   }
 };
 
-const genMirror = javascript.javascriptGenerator || javascriptGenerator;
-
-genMirror.forBlock['transform_mirror_plane'] = function(block, generator) {
+javascript.javascriptGenerator.forBlock['transform_mirror_plane'] = function(block, generator) {
   var plane = block.getFieldValue('PLANE');
   var statement = generator.statementToCode(block, 'OBJECTS');
 
@@ -61,13 +51,12 @@ genMirror.forBlock['transform_mirror_plane'] = function(block, generator) {
 `;
 };
 
-genMirror.forBlock['transform_mirror_point_rotate'] = function(block, generator) {
-  const g = generator || genMirror;
-  var px = g.valueToCode(block, 'POS_X', g.ORDER_ATOMIC) || '0';
-  var py = g.valueToCode(block, 'POS_Y', g.ORDER_ATOMIC) || '0';
-  var pz = g.valueToCode(block, 'POS_Z', g.ORDER_ATOMIC) || '0';
-  var angle = g.valueToCode(block, 'ANGLE', g.ORDER_ATOMIC) || '0';
-  var statement = g.statementToCode(block, 'OBJECTS');
+javascript.javascriptGenerator.forBlock['transform_mirror_point_rotate'] = function(block, generator) {
+  var px = generator.valueToCode(block, 'POS_X', generator.ORDER_ATOMIC) || '0';
+  var py = generator.valueToCode(block, 'POS_Y', generator.ORDER_ATOMIC) || '0';
+  var pz = generator.valueToCode(block, 'POS_Z', generator.ORDER_ATOMIC) || '0';
+  var angle = generator.valueToCode(block, 'ANGLE', generator.ORDER_ATOMIC) || '0';
+  var statement = generator.statementToCode(block, 'OBJECTS');
 
   return `
 (function() {
@@ -80,7 +69,6 @@ genMirror.forBlock['transform_mirror_point_rotate'] = function(block, generator)
   const center = new THREE.Vector3(Number(${px}), Number(${py}), Number(${pz}));
   const rad = (Number(${angle}) * Math.PI) / 180;
 
-  // Refleksi terhadap titik pusat (x,y,z) -> Geser, Balik Skala (-1,-1,-1), Geser Kembali
   subGroup.position.sub(center);
   subGroup.scale.set(-1, -1, -1);
   subGroup.rotation.z += rad;
