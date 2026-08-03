@@ -38,6 +38,16 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.2);
       z-index: 10;
     }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header-logo {
+      height: 32px;
+      width: auto;
+      object-fit: contain;
+    }
     #app-header h1 {
       font-size: 1.2rem;
       font-weight: 600;
@@ -98,7 +108,10 @@
 <body>
 
   <header id="app-header">
-    <h1>GeoBlock BBGTK DIY</h1>
+    <div class="header-left">
+      <img src="bbgtk diy logo.png" alt="Logo BBGTK DIY" class="header-logo">
+      <h1>GeoBlock BBGTK DIY</h1>
+    </div>
     <button id="btn-render" onclick="renderScene()">Render 3D Kode</button>
   </header>
 
