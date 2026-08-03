@@ -1,6 +1,3 @@
-/**
- * Custom Block: DILATASI / SKALA (GeoBlock BBGTK DIY)
- */
 Blockly.Blocks['transform_scale'] = {
   init: function() {
     this.appendDummyInput().appendField("dilatasikan (skala)");
@@ -12,18 +9,14 @@ Blockly.Blocks['transform_scale'] = {
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour("#FF9800");
-    this.setTooltip("Mengubah ukuran skala objek berdasarkan sumbu X, Y, Z");
   }
 };
 
-const genScale = javascript.javascriptGenerator || javascriptGenerator;
-
-genScale.forBlock['transform_scale'] = function(block, generator) {
-  const g = generator || genScale;
-  var sx = g.valueToCode(block, 'X', g.ORDER_ATOMIC) || '1';
-  var sy = g.valueToCode(block, 'Y', g.ORDER_ATOMIC) || '1';
-  var sz = g.valueToCode(block, 'Z', g.ORDER_ATOMIC) || '1';
-  var statement = g.statementToCode(block, 'OBJECTS');
+javascript.javascriptGenerator.forBlock['transform_scale'] = function(block, generator) {
+  var sx = generator.valueToCode(block, 'X', generator.ORDER_ATOMIC) || '1';
+  var sy = generator.valueToCode(block, 'Y', generator.ORDER_ATOMIC) || '1';
+  var sz = generator.valueToCode(block, 'Z', generator.ORDER_ATOMIC) || '1';
+  var statement = generator.statementToCode(block, 'OBJECTS');
 
   return `
 (function() {
