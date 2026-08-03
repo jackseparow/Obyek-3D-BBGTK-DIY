@@ -3,7 +3,7 @@
  * GeoBlock BBGTK DIY
  */
 
-// Fix/Registrasi blok pemilih palet warna jika belum ada di core Blockly
+// Registrasi blok pemilih warna jika belum ada di core Blockly
 if (!Blockly.Blocks['colour_picker']) {
   Blockly.Blocks['colour_picker'] = {
     init: function() {
@@ -18,7 +18,7 @@ if (!Blockly.Blocks['colour_picker']) {
   };
 }
 
-// Blok Utama Ubah Warna dengan Palet & Transparansi
+// Blok Utama Ubah Warna (Palet + Transparansi)
 Blockly.Blocks['transform_color_palette'] = {
   init: function() {
     this.appendDummyInput().appendField("ubah warna");
