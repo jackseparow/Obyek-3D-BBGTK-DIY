@@ -66,6 +66,12 @@
   <script src="block_scale.js"></script>
   <script src="block_mirror.js"></script>
 
+  <!-- Modul Custom Blocks Operasi Himpunan JS -->
+  <script src="block_union.js"></script>
+  <script src="block_intersection.js"></script>
+  <script src="block_difference.js"></script>
+  <script src="block_hull.js"></script>
+
   <script>
     const jsGen = javascript.javascriptGenerator || javascriptGenerator;
 
@@ -125,30 +131,26 @@
           </block>
         </category>
 
-        <!-- 3. Transformasi (SELURUH 7 BLOK LENGKAP) -->
+        <!-- 3. Transformasi -->
         <category name="Transformasi" colour="#FF9800">
-          <!-- 1. Blok Ubah Warna -->
           <block type="transform_color_palette">
             <value name="OPACITY">
               <shadow type="math_number"><field name="NUM">0</field></shadow>
             </value>
           </block>
 
-          <!-- 2. Translasi -->
           <block type="transform_translate">
             <value name="X"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
             <value name="Y"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
             <value name="Z"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
           </block>
 
-          <!-- 3. Rotasi Sumbu Utama -->
           <block type="transform_rotate">
             <value name="X"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
             <value name="Y"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
             <value name="Z"><shadow type="math_number"><field name="NUM">45</field></shadow></value>
           </block>
 
-          <!-- 4. Rotasi Mengitari Titik -->
           <block type="transform_rotate_around_point">
             <value name="ANGLE"><shadow type="math_number"><field name="NUM">45</field></shadow></value>
             <value name="POS_X"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
@@ -156,17 +158,14 @@
             <value name="POS_Z"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
           </block>
 
-          <!-- 5. Dilatasi (Skala) -->
           <block type="transform_scale">
             <value name="X"><shadow type="math_number"><field name="NUM">2</field></shadow></value>
             <value name="Y"><shadow type="math_number"><field name="NUM">2</field></shadow></value>
             <value name="Z"><shadow type="math_number"><field name="NUM">2</field></shadow></value>
           </block>
 
-          <!-- 6. Pencerminan Bidang -->
           <block type="transform_mirror_plane"></block>
 
-          <!-- 7. Pencerminan Garis -->
           <block type="transform_mirror_line">
             <value name="X1"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
             <value name="Y1"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
@@ -177,8 +176,15 @@
           </block>
         </category>
 
+        <!-- 4. Operasi Himpunan -->
+        <category name="Operasi Himpunan" colour="#E91E63">
+          <block type="csg_union"></block>
+          <block type="csg_intersection"></block>
+          <block type="csg_difference"></block>
+          <block type="csg_hull"></block>
+        </category>
+
         <!-- Kategori Pendukung Lainnya -->
-        <category name="Operasi Himpunan" colour="#E91E63"></category>
         <category name="Operasi Aritmetika" colour="#5B80A5">
           <block type="math_number"><field name="NUM">10</field></block>
           <block type="math_arithmetic"></block>
