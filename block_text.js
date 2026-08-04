@@ -1,23 +1,30 @@
 /**
- * Custom Block: TEKS 3D & TEKS 2D (Sesuai Standar BlocksCAD)
+ * Custom Block: TEKS 3D & TEKS 2D (Format Vertikal / Nested & Alignment)
  * GeoBlock BBGTK DIY
  */
 
-// 1. Blok Teks 3D Asli BlocksCAD
+// 1. Blok Teks 3D (Desain Vertikal Ke Bawah)
 Blockly.Blocks['shape_text_3d'] = {
   init: function() {
     this.appendDummyInput()
-        .appendField("teks 3D")
-        .appendField(new Blockly.FieldTextInput("BBGTK DIY"), "TEXT");
+        .appendField("teks 3D");
 
+    // Input Teks (String Input)
+    this.appendValueInput("TEXT")
+        .setCheck("String")
+        .appendField("teks");
+
+    // Ukuran Font
     this.appendValueInput("SIZE")
         .setCheck("Number")
         .appendField("ukuran");
 
+    // Ketebalan Extrude 3D
     this.appendValueInput("HEIGHT")
         .setCheck("Number")
-        .appendField("tebal (3D)");
+        .appendField("ketebalan");
 
+    // Pilihan Jenis Font
     this.appendDummyInput()
         .appendField("font")
         .appendField(new Blockly.FieldDropdown([
@@ -26,26 +33,37 @@ Blockly.Blocks['shape_text_3d'] = {
           ["Gentilis", "gentilis"]
         ]), "FONT");
 
-    this.setInputsInline(true);
+    // Pilihan Alignment / Center
+    this.appendDummyInput()
+        .appendField("posisi")
+        .appendField(new Blockly.FieldDropdown([
+          ["tengah (center)", "CENTER"],
+          ["sudut (origin)", "ORIGIN"]
+        ]), "ALIGN");
+
+    this.setInputsInline(false); // Memaksa blok memanjang vertikal ke bawah
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour("#5BA58C");
-    this.setTooltip("Membuat geometri huruf 3D timbul padat persis BlocksCAD");
+    this.setTooltip("Membuat geometri huruf 3D timbul padat dengan opsi ukuran, ketebalan, font, dan pemusatan");
   }
 };
 
+// Generator Kode JavaScript untuk Three.js
 javascript.javascriptGenerator.forBlock['shape_text_3d'] = function(block, generator) {
-  var textStr = block.getFieldValue('TEXT') || "BBGTK DIY";
-  var size = generator.valueToCode(block, 'SIZE', generator.ORDER_ATOMIC) || '10';
-  var height = generator.valueToCode(block, 'HEIGHT', generator.ORDER_ATOMIC) || '2';
+  var textStr = generator.valueToCode(block, 'TEXT', generator.ORDER_ATOMIC) || '"BBGTK DIY"';
+  var sizeVal = generator.valueToCode(block, 'SIZE', generator.ORDER_ATOMIC) || '10';
+  var heightVal = generator.valueToCode(block, 'HEIGHT', generator.ORDER_ATOMIC) || '2';
   var fontName = block.getFieldValue('FONT') || 'helvetiker';
+  var align = block.getFieldValue('ALIGN') || 'CENTER';
 
   return `
 (function() {
-  const textStr = "${textStr}";
-  const sizeVal = Number(${size});
-  const heightVal = Number(${height});
+  const textStr = String(${textStr});
+  const sizeVal = Number(${sizeVal});
+  const heightVal = Number(${heightVal});
   const fontKey = "${fontName}";
+  const isCenter = "${align}" === "CENTER";
 
   if (window.loadedFonts && window.loadedFonts[fontKey]) {
     const font = window.loadedFonts[fontKey];
@@ -58,7 +76,9 @@ javascript.javascriptGenerator.forBlock['shape_text_3d'] = function(block, gener
     });
 
     textGeo.computeBoundingBox();
-    textGeo.center(); // Pemusatan otomatis persis gaya BlocksCAD
+    if (isCenter) {
+      textGeo.center(); // Memusatkan titik pusat di tengah teks
+    }
 
     const mat = new THREE.MeshStandardMaterial({ 
       color: 0x5BA58C, 
@@ -69,7 +89,7 @@ javascript.javascriptGenerator.forBlock['shape_text_3d'] = function(block, gener
     const mesh = new THREE.Mesh(textGeo, mat);
     sceneGroup.add(mesh);
   } else {
-    console.warn("Font " + fontKey + " sedang dimuat atau belum siap.");
+    console.warn("Font " + fontKey + " belum siap dimuat.");
   }
 })();
 `;
@@ -79,14 +99,17 @@ javascript.javascriptGenerator.forBlock['shape_text_3d'] = function(block, gener
 Blockly.Blocks['shape_text_2d'] = {
   init: function() {
     this.appendDummyInput()
-        .appendField("teks 2D")
-        .appendField(new Blockly.FieldTextInput("GeoBlock"), "TEXT");
+        .appendField("teks 2D");
+
+    this.appendValueInput("TEXT")
+        .setCheck("String")
+        .appendField("teks");
 
     this.appendValueInput("SIZE")
         .setCheck("Number")
         .appendField("ukuran");
 
-    this.setInputsInline(true);
+    this.setInputsInline(false);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour("#5BA58C");
@@ -95,13 +118,13 @@ Blockly.Blocks['shape_text_2d'] = {
 };
 
 javascript.javascriptGenerator.forBlock['shape_text_2d'] = function(block, generator) {
-  var textStr = block.getFieldValue('TEXT') || "GeoBlock";
-  var size = generator.valueToCode(block, 'SIZE', generator.ORDER_ATOMIC) || '10';
+  var textStr = generator.valueToCode(block, 'TEXT', generator.ORDER_ATOMIC) || '"GeoBlock"';
+  var sizeVal = generator.valueToCode(block, 'SIZE', generator.ORDER_ATOMIC) || '10';
 
   return `
 (function() {
-  const textStr = "${textStr}";
-  const sizeVal = Number(${size});
+  const textStr = String(${textStr});
+  const sizeVal = Number(${sizeVal});
   const fontKey = "helvetiker";
 
   if (window.loadedFonts && window.loadedFonts[fontKey]) {
