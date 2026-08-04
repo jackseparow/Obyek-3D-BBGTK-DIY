@@ -84,6 +84,9 @@
       Blockly.Msg["MATH_MODULO_TITLE"] = "modulo %1 ÷ %2";
       Blockly.Msg["LOGIC_BOOLEAN_TRUE"] = "benar";
       Blockly.Msg["LOGIC_BOOLEAN_FALSE"] = "salah";
+      
+      // REVISI NAMA 1: Mengubah "buat teks dengan" menjadi "gabung teks"
+      Blockly.Msg["TEXT_JOIN_TITLE_CREATEWITH"] = "gabung teks";
     }
 
     // Pre-load Font Asli Three.js
@@ -290,16 +293,33 @@
         <category name="Variabel" colour="#A55B80" custom="VARIABLE"></category>
         
         <category name="Teks" colour="#5BA58C">
+          <!-- REVISI NAMA 2: Blok Teks 3D Format Vertikal Rapi -->
           <block type="shape_text_3d">
-            <value name="SIZE"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
-            <value name="HEIGHT"><shadow type="math_number"><field name="NUM">2</field></shadow></value>
+            <value name="TEXT">
+              <shadow type="text"><field name="TEXT">BBGTK DIY</field></shadow>
+            </value>
+            <value name="SIZE">
+              <shadow type="math_number"><field name="NUM">10</field></shadow>
+            </value>
+            <value name="HEIGHT">
+              <shadow type="math_number"><field name="NUM">2</field></shadow>
+            </value>
           </block>
 
+          <!-- Blok Teks 2D -->
           <block type="shape_text_2d">
-            <value name="SIZE"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+            <value name="TEXT">
+              <shadow type="text"><field name="TEXT">GeoBlock</field></shadow>
+            </value>
+            <value name="SIZE">
+              <shadow type="math_number"><field name="NUM">10</field></shadow>
+            </value>
           </block>
 
+          <!-- Blok String Teks Biasa -->
           <block type="text"></block>
+
+          <!-- Blok Penggabung String (Gabung Teks) -->
           <block type="text_join"></block>
         </category>
       </xml>
