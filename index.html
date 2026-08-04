@@ -18,7 +18,7 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body, html { width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    #app-header { height: 50px; background-color: #1e1e2f; color: #ffffff; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); z-index: 10; }
+    #app-header { height: 50px; background-color: #1e1e2f; color: #ffffff; display: flex; align-align: center; justify-content: space-between; padding: 0 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); z-index: 10; }
     .header-left { display: flex; align-items: center; gap: 12px; }
     .header-logo { height: 32px; width: auto; object-fit: contain; }
     #app-header h1 { font-size: 1.2rem; font-weight: 600; letter-spacing: 0.5px; }
@@ -74,6 +74,30 @@
 
   <script>
     const jsGen = javascript.javascriptGenerator || javascriptGenerator;
+
+    // Registrasi Blok Derajat / Sudut Kustom
+    Blockly.Blocks['math_custom_angle'] = {
+      init: function() {
+        var angleField;
+        if (typeof Blockly.FieldAngle === 'function') {
+          angleField = new Blockly.FieldAngle(90);
+        } else {
+          angleField = new Blockly.FieldNumber(90, 0, 360);
+        }
+        this.appendDummyInput()
+            .appendField("sudut (derajat)")
+            .appendField(angleField, "ANGLE")
+            .appendField("°");
+        this.setOutput(true, "Number");
+        this.setColour("#5B80A5");
+        this.setTooltip("Masukkkan nilai sudut/derajat (0° - 360°)");
+      }
+    };
+
+    jsGen.forBlock['math_custom_angle'] = function(block) {
+      var angle = block.getFieldValue('ANGLE') || 0;
+      return [angle, jsGen.ORDER_ATOMIC];
+    };
 
     const toolboxXml = `
       <xml id="toolbox" style="display: none">
@@ -184,10 +208,13 @@
           <block type="csg_hull"></block>
         </category>
 
-        <!-- 5. Matematika (STABIL 100%) -->
+        <!-- 5. Matematika -->
         <category name="Matematika" colour="#5B80A5">
           <block type="math_number"><field name="NUM">10</field></block>
           
+          <!-- Blok Sudut / Derajat -->
+          <block type="math_custom_angle"></block>
+
           <block type="math_arithmetic">
             <value name="A"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
             <value name="B"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
@@ -198,7 +225,7 @@
           </block>
 
           <block type="math_trig">
-            <value name="NUM"><shadow type="math_number"><field name="NUM">45</field></shadow></value>
+            <value name="NUM"><shadow type="math_custom_angle"></shadow></value>
           </block>
 
           <block type="math_constant"></block>
