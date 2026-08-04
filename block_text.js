@@ -1,9 +1,9 @@
 /**
- * Custom Block: TEKS 3D & TEKS 2D
+ * Custom Block: TEKS 3D & TEKS 2D (Sesuai Standar BlocksCAD)
  * GeoBlock BBGTK DIY
  */
 
-// 1. Blok Teks 3D
+// 1. Blok Teks 3D Asli BlocksCAD
 Blockly.Blocks['shape_text_3d'] = {
   init: function() {
     this.appendDummyInput()
@@ -21,17 +21,16 @@ Blockly.Blocks['shape_text_3d'] = {
     this.appendDummyInput()
         .appendField("font")
         .appendField(new Blockly.FieldDropdown([
-          ["Helvetiker (Bold)", "helvetiker_bold"],
-          ["Helvetiker (Regular)", "helvetiker_regular"],
-          ["Optimer (Regular)", "optimer_regular"],
-          ["Gentilis (Regular)", "gentilis_regular"]
+          ["Helvetiker", "helvetiker"],
+          ["Optimer", "optimer"],
+          ["Gentilis", "gentilis"]
         ]), "FONT");
 
     this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour("#5BA58C");
-    this.setTooltip("Membuat objek huruf/teks timbul 3D");
+    this.setTooltip("Membuat geometri huruf 3D timbul padat persis BlocksCAD");
   }
 };
 
@@ -39,42 +38,44 @@ javascript.javascriptGenerator.forBlock['shape_text_3d'] = function(block, gener
   var textStr = block.getFieldValue('TEXT') || "BBGTK DIY";
   var size = generator.valueToCode(block, 'SIZE', generator.ORDER_ATOMIC) || '10';
   var height = generator.valueToCode(block, 'HEIGHT', generator.ORDER_ATOMIC) || '2';
-  var fontName = block.getFieldValue('FONT') || 'helvetiker_bold';
+  var fontName = block.getFieldValue('FONT') || 'helvetiker';
 
   return `
 (function() {
   const textStr = "${textStr}";
-  const textSize = Number(${size});
-  const textHeight = Number(${height});
-  
-  // Menggunakan Canvas Texture 3D Papan Teks cepat
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d');
-  canvas.width = 512;
-  canvas.height = 256;
-  ctx.fillStyle = '#ffffff';
-  ctx.font = 'Bold ' + Math.floor(textSize * 8) + 'px Arial, sans-serif';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(textStr, 256, 128);
+  const sizeVal = Number(${size});
+  const heightVal = Number(${height});
+  const fontKey = "${fontName}";
 
-  const texture = new THREE.CanvasTexture(canvas);
-  const mat = new THREE.MeshStandardMaterial({ 
-    map: texture, 
-    transparent: true, 
-    side: THREE.DoubleSide 
-  });
-  
-  const geo = new THREE.BoxGeometry(textSize * (textStr.length * 0.6), textSize * 1.2, textHeight);
-  const mesh = new THREE.Mesh(geo, mat);
-  mesh.position.set(0, 0, textHeight / 2);
-  sceneGroup.add(mesh);
+  if (window.loadedFonts && window.loadedFonts[fontKey]) {
+    const font = window.loadedFonts[fontKey];
+    const textGeo = new THREE.TextGeometry(textStr, {
+      font: font,
+      size: sizeVal,
+      height: heightVal,
+      curveSegments: 12,
+      bevelEnabled: false
+    });
+
+    textGeo.computeBoundingBox();
+    textGeo.center(); // Pemusatan otomatis persis gaya BlocksCAD
+
+    const mat = new THREE.MeshStandardMaterial({ 
+      color: 0x5BA58C, 
+      roughness: 0.4, 
+      metalness: 0.1 
+    });
+
+    const mesh = new THREE.Mesh(textGeo, mat);
+    sceneGroup.add(mesh);
+  } else {
+    console.warn("Font " + fontKey + " sedang dimuat atau belum siap.");
+  }
 })();
 `;
 };
 
-
-// 2. Blok Teks 2D (Flat Label)
+// 2. Blok Teks 2D (Flat Surface Profile)
 Blockly.Blocks['shape_text_2d'] = {
   init: function() {
     this.appendDummyInput()
@@ -89,7 +90,7 @@ Blockly.Blocks['shape_text_2d'] = {
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour("#5BA58C");
-    this.setTooltip("Membuat papan/label huruf 2D datar");
+    this.setTooltip("Membuat permukaan profil huruf 2D datar");
   }
 };
 
@@ -100,23 +101,29 @@ javascript.javascriptGenerator.forBlock['shape_text_2d'] = function(block, gener
   return `
 (function() {
   const textStr = "${textStr}";
-  const textSize = Number(${size});
+  const sizeVal = Number(${size});
+  const fontKey = "helvetiker";
 
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d');
-  canvas.width = 512;
-  canvas.height = 128;
-  ctx.fillStyle = '#ffffff';
-  ctx.font = Math.floor(textSize * 10) + 'px sans-serif';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(textStr, 256, 64);
+  if (window.loadedFonts && window.loadedFonts[fontKey]) {
+    const font = window.loadedFonts[fontKey];
+    const textGeo = new THREE.TextGeometry(textStr, {
+      font: font,
+      size: sizeVal,
+      height: 0.01,
+      curveSegments: 12
+    });
 
-  const texture = new THREE.CanvasTexture(canvas);
-  const geo = new THREE.PlaneGeometry(textSize * (textStr.length * 0.6), textSize);
-  const mat = new THREE.MeshBasicMaterial({ map: texture, transparent: true, side: THREE.DoubleSide });
-  const mesh = new THREE.Mesh(geo, mat);
-  sceneGroup.add(mesh);
+    textGeo.computeBoundingBox();
+    textGeo.center();
+
+    const mat = new THREE.MeshBasicMaterial({ 
+      color: 0x5BA58C, 
+      side: THREE.DoubleSide 
+    });
+
+    const mesh = new THREE.Mesh(textGeo, mat);
+    sceneGroup.add(mesh);
+  }
 })();
 `;
 };
