@@ -11,9 +11,11 @@
   <script src="https://unpkg.com/blockly/javascript_compressed.js"></script>
   <script src="https://unpkg.com/blockly/msg/id.js"></script>
 
-  <!-- Three.js CDN (3D Engine Viewport) -->
+  <!-- Three.js CDN & Font Extensions -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FontLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/geometries/TextGeometry.js"></script>
 
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -83,6 +85,21 @@
       Blockly.Msg["LOGIC_BOOLEAN_TRUE"] = "benar";
       Blockly.Msg["LOGIC_BOOLEAN_FALSE"] = "salah";
     }
+
+    // Pre-load Font Asli Three.js
+    window.loadedFonts = {};
+    const fontLoader = new THREE.FontLoader();
+    const fontUrls = {
+      helvetiker: 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/fonts/helvetiker_regular.typeface.json',
+      optimer: 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/fonts/optimer_regular.typeface.json',
+      gentilis: 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/fonts/gentilis_regular.typeface.json'
+    };
+
+    Object.keys(fontUrls).forEach(key => {
+      fontLoader.load(fontUrls[key], function(font) {
+        window.loadedFonts[key] = font;
+      });
+    });
 
     Blockly.Blocks['math_custom_angle'] = {
       init: function() {
@@ -273,18 +290,15 @@
         <category name="Variabel" colour="#A55B80" custom="VARIABLE"></category>
         
         <category name="Teks" colour="#5BA58C">
-          <!-- Blok Teks 3D Visual -->
           <block type="shape_text_3d">
             <value name="SIZE"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
             <value name="HEIGHT"><shadow type="math_number"><field name="NUM">2</field></shadow></value>
           </block>
 
-          <!-- Blok Teks 2D Label -->
           <block type="shape_text_2d">
             <value name="SIZE"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
           </block>
 
-          <!-- Blok Teks Bawaan -->
           <block type="text"></block>
           <block type="text_join"></block>
         </category>
