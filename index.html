@@ -72,17 +72,18 @@
   <script src="block_difference.js"></script>
   <script src="block_hull.js"></script>
 
+  <!-- Modul Custom Blocks Teks JS -->
+  <script src="block_text.js"></script>
+
   <script>
     const jsGen = javascript.javascriptGenerator || javascriptGenerator;
 
-    // Registrasi Custom Label Bahasa Indonesia untuk Blok Modulo & Logika
     if (Blockly.Msg) {
       Blockly.Msg["MATH_MODULO_TITLE"] = "modulo %1 ÷ %2";
       Blockly.Msg["LOGIC_BOOLEAN_TRUE"] = "benar";
       Blockly.Msg["LOGIC_BOOLEAN_FALSE"] = "salah";
     }
 
-    // Registrasi Single Block untuk Input Nilai Derajat / Sudut
     Blockly.Blocks['math_custom_angle'] = {
       init: function() {
         this.appendDummyInput()
@@ -242,27 +243,17 @@
           <block type="math_random_float"></block>
         </category>
 
-        <!-- 6. Logika (LENGKAP 6 BLOK) -->
+        <!-- 6. Logika -->
         <category name="Logika" colour="#5C81A6">
-          <!-- 1. Jika maka (Kondisional) -->
           <block type="controls_if"></block>
-
-          <!-- 2. Pembanding (=, !=, <, <=, >, >=) -->
           <block type="logic_compare">
             <value name="A"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
             <value name="B"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
           </block>
 
-          <!-- 3. Operasi Dan / Atau -->
           <block type="logic_operation"></block>
-
-          <!-- 4. Negasi / Bukan (Not) -->
           <block type="logic_negate"></block>
-
-          <!-- 5. Nilai Benar / Salah (Boolean) -->
           <block type="logic_boolean"></block>
-
-          <!-- 6. Kondisional Singkat (Ternary) -->
           <block type="logic_ternary"></block>
         </category>
 
@@ -280,7 +271,20 @@
 
         <!-- 8. Variabel & Teks -->
         <category name="Variabel" colour="#A55B80" custom="VARIABLE"></category>
+        
         <category name="Teks" colour="#5BA58C">
+          <!-- Blok Teks 3D Visual -->
+          <block type="shape_text_3d">
+            <value name="SIZE"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+            <value name="HEIGHT"><shadow type="math_number"><field name="NUM">2</field></shadow></value>
+          </block>
+
+          <!-- Blok Teks 2D Label -->
+          <block type="shape_text_2d">
+            <value name="SIZE"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+          </block>
+
+          <!-- Blok Teks Bawaan -->
           <block type="text"></block>
           <block type="text_join"></block>
         </category>
