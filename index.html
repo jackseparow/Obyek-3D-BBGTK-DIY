@@ -75,9 +75,11 @@
   <script>
     const jsGen = javascript.javascriptGenerator || javascriptGenerator;
 
-    // Registrasi Custom Label Bahasa Indonesia untuk Blok Modulo
+    // Registrasi Custom Label Bahasa Indonesia untuk Blok Modulo & Logika
     if (Blockly.Msg) {
       Blockly.Msg["MATH_MODULO_TITLE"] = "modulo %1 ÷ %2";
+      Blockly.Msg["LOGIC_BOOLEAN_TRUE"] = "benar";
+      Blockly.Msg["LOGIC_BOOLEAN_FALSE"] = "salah";
     }
 
     // Registrasi Single Block untuk Input Nilai Derajat / Sudut
@@ -210,8 +212,6 @@
         <!-- 5. Matematika -->
         <category name="Matematika" colour="#5B80A5">
           <block type="math_number"><field name="NUM">10</field></block>
-          
-          <!-- Single Block Input Derajat / Sudut -->
           <block type="math_custom_angle"></block>
 
           <block type="math_arithmetic">
@@ -229,7 +229,6 @@
             <value name="NUM"><shadow type="math_number"><field name="NUM">3.14</field></shadow></value>
           </block>
 
-          <!-- Blok Modulo -->
           <block type="math_modulo">
             <value name="DIVIDEND"><shadow type="math_number"><field name="NUM">64</field></shadow></value>
             <value name="DIVISOR"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
@@ -243,12 +242,28 @@
           <block type="math_random_float"></block>
         </category>
 
-        <!-- 6. Logika -->
+        <!-- 6. Logika (LENGKAP 6 BLOK) -->
         <category name="Logika" colour="#5C81A6">
+          <!-- 1. Jika maka (Kondisional) -->
           <block type="controls_if"></block>
-          <block type="logic_compare"></block>
+
+          <!-- 2. Pembanding (=, !=, <, <=, >, >=) -->
+          <block type="logic_compare">
+            <value name="A"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
+            <value name="B"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
+          </block>
+
+          <!-- 3. Operasi Dan / Atau -->
           <block type="logic_operation"></block>
+
+          <!-- 4. Negasi / Bukan (Not) -->
+          <block type="logic_negate"></block>
+
+          <!-- 5. Nilai Benar / Salah (Boolean) -->
           <block type="logic_boolean"></block>
+
+          <!-- 6. Kondisional Singkat (Ternary) -->
+          <block type="logic_ternary"></block>
         </category>
 
         <!-- 7. Iterasi -->
